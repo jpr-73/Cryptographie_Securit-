@@ -1,9 +1,14 @@
-import start
+import cliText
 import connect
 
 def main():
-    start.print1stHeader()
-    connect.connect()
+    cliText.print1stHeader()
+    connected = connect.connect()
+
+    if connect :
+        cliText.printCommandHeader()
+        text = input(">")
+        
 
 
 if __name__ == "__main__":

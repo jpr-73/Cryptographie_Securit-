@@ -5,3 +5,11 @@ def print1stHeader():
     print(" Project by Alexandre Raccurt - Gabriel Zeizer - Aurélien Santi ")
     print("=========================")
     print()
+
+def printCommandHeader():
+    print()
+    print("=========================")
+    print("AVAILABLE COMMANDS")
+    print("=========================")
+    print("/help")
+    print()

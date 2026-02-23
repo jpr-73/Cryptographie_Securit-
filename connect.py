@@ -15,17 +15,19 @@ def connect() :
     print("[+] Connecting to " + host + " : " + str(port))
     try: 
         ip = socket.gethostbyname('vlbelintrocrypto.hevs.ch')
-        print("[+] Server IP = " + ip)
+        print("[+] Resolved server IP = " + ip)
     except socket.gaierror: 
         print ("[X] Connection impossible : There was an error resolving the host")
         sys.exit()
 
     try: 
         s.connect((ip, port))
-        print("[V] Connected successfully to : " + ip + ":" + str(port))
+        print("[V] Connected successfully")
     except socket.gaierror: 
         print ("[X] Connection impossible : Host Unreachable")
         sys.exit()
+
+    return True
 
 def messageType(msg):
     header = b"ISC"
