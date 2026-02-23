@@ -1,5 +1,17 @@
+import cliText
+import connect
+import interpretCommand
+
 def main():
-    print("Hello from 103-2-pbasics!")
+    cliText.print1stHeader()
+    connected = connect.connect()
+
+    if connect :
+        cliText.printCommandHeader()
+        while True :
+            text = input(">")
+            interpretCommand.interpret(text)
+
 
 
 if __name__ == "__main__":
