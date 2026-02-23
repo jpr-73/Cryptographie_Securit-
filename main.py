@@ -1,5 +1,9 @@
+import start
+import connect
+
 def main():
-    print("Hello from 103-2-pbasics!")
+    start.print1stHeader()
+    connect.connect()
 
 
 if __name__ == "__main__":
