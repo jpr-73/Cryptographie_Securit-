@@ -47,24 +47,22 @@ def shift(msg, key):
     s = int(key)
 
     for c in msg:
-        if c.isalpha():
-            charInt = int.from_bytes(c.encode("utf-8"), byteorder="big")
-            charInt += s
-            charByte = charInt.to_bytes(4, byteorder="big")
-            res += charByte
+        charInt = int.from_bytes(c.encode("utf-8"), byteorder="big")
+        charInt += s
+        charByte = charInt.to_bytes(4, byteorder="big")
+        res += charByte
     return res
         
 
 def decode_shift(msg, key):
-    res = b""
+    res = ""
     s = int(key)
 
-    for c in msg:
-        if c.isalpha():
-            charInt = int.from_bytes(c.encode("utf-8"), byteorder="big")
-            charInt -= s
-            charByte = charInt.to_bytes(4, byteorder="big")
-            res += charByte
+    for c in range(0, len(msg), 4):
+        chunk = msg[c:c+4]
+        charInt = int.from_bytes(chunk, byteorder="big")
+        charInt -= s
+        res += chr(charInt)
     return res
     
 
