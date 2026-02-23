@@ -1,5 +1,6 @@
 import cliText
 import connect
+import interpretCommand
 
 def main():
     cliText.print1stHeader()
@@ -7,8 +8,10 @@ def main():
 
     if connect :
         cliText.printCommandHeader()
-        text = input(">")
-        
+        while True :
+            text = input(">")
+            interpretCommand.interpret(text)
+
 
 
 if __name__ == "__main__":
