@@ -42,6 +42,9 @@ def addMsgSize(n):
 
 
 
+# shift a message by a key that has to be a int or a single character
+# make sure to convert the shifted message in the right unicode in big-endian order
+
 def shift(msg, key):
     res = b""
     s = int(key)
@@ -53,6 +56,8 @@ def shift(msg, key):
         res += charByte
     return res
         
+# decode the shifted message from byte and big-endian order to a string to be readable 
+# for the user
 
 def decode_shift(msg, key):
     res = ""
