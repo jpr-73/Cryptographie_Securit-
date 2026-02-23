@@ -1,3 +1,6 @@
+# shift a message by a key that has to be a int or a single character
+# make sure to convert the shifted message in the right unicode in big-endian order
+
 def shift(msg, key):
     res = b""
     s = int(key)
@@ -9,6 +12,8 @@ def shift(msg, key):
         res += charByte
     return res
         
+# decode the shifted message from byte and big-endian order to a string to be readable 
+# for the user
 
 def decode_shift(msg, key):
     res = ""
@@ -21,7 +26,8 @@ def decode_shift(msg, key):
         res += chr(charInt)
     return res
 
-test_shift = shift("hello", "123")
 
+
+test_shift = shift("hello", "123")
 print("shifted message ->", shift("hello", "123"))
 print("decoded shifted message ->", decode_shift(test_shift, "123"))
