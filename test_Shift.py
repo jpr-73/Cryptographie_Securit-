@@ -1,5 +1,3 @@
-import traceback
-
 def shift(msg, key):
     res = b""
     s = int(key)
