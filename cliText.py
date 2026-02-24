@@ -12,4 +12,6 @@ def printCommandHeader():
     print("AVAILABLE COMMANDS")
     print("=========================")
     print("/help")
+    print("/send <text>")
+    print("/exit")
     print()
