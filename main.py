@@ -1,7 +1,7 @@
 import cliText
 import connect
 import interpretCommand
-import client
+=======
 #Project by Aurélien Santi - Alexandre Raccurt - Gabriel Zeizer
 
 import socket
@@ -65,6 +65,19 @@ def decode_shift(msg, key):
         res += chr(charInt)
     return res
     
+
+>>>>>>> e201c94 (shift function implemented)
+
+def main():
+    cliText.print1stHeader()
+    connected = connect.connect()
+
+    if connect :
+        cliText.printCommandHeader()
+        while True :
+            text = input(">")
+            interpretCommand.interpret(text)
+
 
 
 if __name__ == "__main__":
