@@ -9,7 +9,7 @@ import socket
 host = "vlbeintrocrypto.hevs.ch"
 port = 6000
 ip = ""
-
+help
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 print(host, port)

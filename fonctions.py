@@ -8,11 +8,12 @@ ISC_HEADER = b'ISC'
 # Int <-> Bytes Conversion
 # ===========================================
 
-def int_to_bytes(value, num_bytes):
-    return value.to_bytes(num_bytes)
+def int_to_bytes(value:int, num_bytes:int) -> bytes:
+    return value.to_bytes(num_bytes, 'big')
 
-def bytes_to_int(data):
-    return int.from_bytes(data)
+def bytes_to_int(data:bytes) -> int:
+    return int.from_bytes(data, 'big')
+
 
 # ===========================================
 # String <-> Integer List Conversion
@@ -47,6 +48,12 @@ def decode_ints(data, bytes_per_int = 4):
         out.append(int.from_bytes(data[i], 'big'))
     return out
 
+def decode (data, bytes_per_int = 4):
+    out : str = ""
+    for i in range(len(data)):
+        out += data[i].decode("utf-32-be")
+    return out
+
 # ===========================================
 # ISC Message Creation
 # ===========================================
@@ -59,13 +66,8 @@ def create_image_message(width, hight, image_data):
     string = f"[ISC][i][{width}][{hight}][{encode_ints(image_data)}]"
     return string
 
+# ===========================================
+# Message Reception
+# ===========================================
 
 
-ls = string_to_ints("abcd")
-print(ls)
-a = encode_ints(ls)
-print(a)
-z = decode_ints(a)
-print(z)
-print(create_text_message("abcd"))
-print(create_image_message(100, 100, [1, 2, 3, 4]))

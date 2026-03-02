@@ -2,6 +2,9 @@
 import socket
 import sys
 import time
+import fonctions
+from fonctions import decode
+
 
 class Client:
 
