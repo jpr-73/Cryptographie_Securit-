@@ -32,12 +32,13 @@ class Client:
         return True
 
     def send(self, message) :
-        print("coucou my")
+        print("On essaie d'envoyer un truc")
         self.sock.send(message)
     
-    def receive(self, timeout = 0.001) :
+    def receive(self, timeout = 10.00) :
         try :
-            self.sock.settimeout(timeout)
+            print("test")
+            #self.sock.settimeout(timeout)
             while True :
                 answer = self.sock.recv(4)
                 if not answer :

@@ -1,10 +1,11 @@
 import cliText
 import connect
 import interpretCommand
-=======
+import client
 #Project by Aurélien Santi - Alexandre Raccurt - Gabriel Zeizer
 
 import socket
+import threading
 
 host = "vlbeintrocrypto.hevs.ch"
 port = 6000
@@ -22,17 +23,15 @@ def main():
 
     connected = client1.connect(host, port)
 
+    iListen = threading.Thread(target=client1.receive)
+    iListen.start()
+
     if connect :
         cliText.printCommandHeader()
         while working :
             print()
             text = input(">")
             working = interpretCommand.interpret(text)
-
-
-
-
-
 
 
 
@@ -94,17 +93,6 @@ def decode_vigenere(msg, key):
     return res 
     
 
->>>>>>> e201c94 (shift function implemented)
-
-def main():
-    cliText.print1stHeader()
-    connected = connect.connect()
-
-    if connect :
-        cliText.printCommandHeader()
-        while True :
-            text = input(">")
-            interpretCommand.interpret(text)
 
 
 

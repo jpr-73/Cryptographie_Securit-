@@ -1,5 +1,6 @@
 import main
 import client
+import message
 
 def interpret(line) :
     if len(line) >=1 and line[0] == "/" :
@@ -15,14 +16,16 @@ def interpret(line) :
                     main.client1.close()
                     return False
                 case "send" :
-                    toSend = b""
-                    header = messageType("t")
-                    message = b"Coucou"
 
-                    toSend += header
-                    toSend += b"06"
+                    message1 = message.Message("t", "CoucouAll")
+                    message1.build()
+                    print(message1.build())
+
                     #toSend += addMsgSize(message)
-                    toSend += message ##len(message).to_bytes(2, big)
+                    toSend = message1.build() ##len(message).to_bytes(2, big)
+                    toSend = len(message1.build()).to_bytes(2, 'big')
+                    print("toSend = " + toSend.decode())
+                    #print("tosend = " + toSend)
 
                     main.client1.send(toSend)
                     main.client1.receive(100)
