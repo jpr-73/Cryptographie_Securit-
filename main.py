@@ -64,6 +64,34 @@ def decode_shift(msg, key):
         charInt -= s
         res += chr(charInt)
     return res
+
+def vigenere(msg, key):
+    res = b""
+    length = len(key)
+
+    for i, char in enumerate(msg):
+        m = int.from_bytes(char.encode("utf-8"), byteorder="big") #transform the current character into a utf-8 byte in big endian 
+        k = int.from_bytes(key[i % length].encode("utf-8"), byteorder="big") #transform the key and for each character do a different mod with the current index we are in
+        c = m + k # apply the key to the caracter to encrypt (E(x) = m + k)
+        res += c.to_bytes(4, byteorder="big") 
+    
+    return res
+
+def decode_vigenere(msg, key):
+    res = ""
+    length = len(key)
+    ky_idx = 0
+
+    for c in range(0, len(msg), 4):
+        chunk = msg[c:c+4] 
+        charInt = int.from_bytes(chunk, byteorder="big")
+        
+        k = key[ky_idx % length] 
+        m = charInt - ord(k) # D(x) = m - k -> D(E(x)) = x
+        
+        res += chr(m)
+        ky_idx += 1
+    return res 
     
 
 >>>>>>> e201c94 (shift function implemented)
