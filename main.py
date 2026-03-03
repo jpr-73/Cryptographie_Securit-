@@ -1,5 +1,4 @@
 import cliText
-import connect
 import interpretCommand
 import client
 #Project by Aurélien Santi - Alexandre Raccurt - Gabriel Zeizer
@@ -26,12 +25,11 @@ def main():
     iListen = threading.Thread(target=client1.receive)
     iListen.start()
 
-    if connect :
-        cliText.printCommandHeader()
-        while working :
-            print()
-            text = input(">")
-            working = interpretCommand.interpret(text)
+    cliText.printCommandHeader()
+    while working :
+        print()
+        text = input(">")
+        working = interpretCommand.interpret(text)
 
 
 

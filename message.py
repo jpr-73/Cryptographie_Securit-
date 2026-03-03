@@ -4,20 +4,27 @@ class Message():
         self.message = message
         None
 
-    def build(self):
-        buildedMessage = b""
-        header = self.messageType(self.type)
-        buildedMessage += header
-        buildedMessage += b"06"
-        buildedMessage += (self.message).encode("utf-32-be")
-        #toSend += addMsgSize(message)
-        ##len(message).to_bytes(2, big)
-
-        return buildedMessage
     
+    def create_text_message(self, bytes_per_char = 4, isServer = False):
+        bytesMessage = ("ISC" + self.type).encode("ASCII") + (len(self.message).to_bytes(2, byteorder="big")) + (b"".join(self.encode_ints(self.string_to_ints(self.message), bytes_per_char)))
+        return bytesMessage
+    
+    def string_to_ints(self, text):
+        t = text.encode("utf-8")
+        out : list = list()
+        for i in range(len(t)):
+            out.append(int(t[i]))
+        return out
+    
+    def encode_ints(self, int_list, bytes_per_int = 4):
+        lsBytes : list = list()
+        for i in range(len(int_list)):
+            lsBytes.append(int_list[i].to_bytes(bytes_per_int, 'big'))
+        return lsBytes
+    
+
     def messageType(self, msg):
         header = b"ISC"
-
         if msg == "t" or msg == "T" :
             header += b"t"
         elif msg =="s" or msg == "S":
@@ -26,6 +33,7 @@ class Message():
             header += b"i"
 
         return header
+
 
     def sizeOfMsg(self, b):
         result = b[4:]

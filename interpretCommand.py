@@ -5,7 +5,6 @@ import message
 def interpret(line) :
     if len(line) >=1 and line[0] == "/" :
         splitted = line.split(" ")
-        #print(splitted)
         if len(splitted) > 0 :
             match splitted[0][1:] :
                 case "help" :
@@ -16,23 +15,14 @@ def interpret(line) :
                     main.client1.close()
                     return False
                 case "send" :
-
-                    message1 = message.Message("t", "CoucouAll")
-                    message1.build()
-                    print(message1.build())
-
-                    #toSend += addMsgSize(message)
-                    toSend = message1.build() ##len(message).to_bytes(2, big)
-                    toSend = len(message1.build()).to_bytes(2, 'big')
-                    print("toSend = " + toSend.decode())
-                    #print("tosend = " + toSend)
-
+                    message1 = message.Message("t", " ".join(splitted[1:]))
+                    toSend = message1.create_text_message()
                     main.client1.send(toSend)
-                    main.client1.receive(100)
 
                     #if len(splitted) > 1 :
                     #    for el in splitted
                     #        message = splitted[1]
+                    return True
                 case _ : print("Unknown Command")
             
         else :

@@ -32,23 +32,26 @@ class Client:
         return True
 
     def send(self, message) :
-        print("On essaie d'envoyer un truc")
         self.sock.send(message)
     
     def receive(self, timeout = 10.00) :
         try :
-            print("test")
             #self.sock.settimeout(timeout)
             while True :
                 answer = self.sock.recv(4)
                 if not answer :
                     print("Server disconnected")
+                    sys.stdout.flush()
                 else :
-                    print("received = " + str(answer))
+                    #print("received = " + str(answer))
+                    sys.stdout.write(f"\r\033[K[Message reçu]: {str(answer)}\n> ")
+                    sys.stdout.flush()
         except socket.timeout:
             print("Connection Time out")
+            sys.stdout.flush()
         except Exception as e:
             print(f"Error : {e}")
+            sys.stdout.flush()
 
     def close(self) :
         self.s.close()

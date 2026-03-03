@@ -69,5 +69,3 @@ def create_image_message(width, hight, image_data):
 # ===========================================
 # Message Reception
 # ===========================================
-
-
