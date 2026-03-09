@@ -19,13 +19,6 @@ def bytes_to_int(data:bytes) -> int:
 # String <-> Integer List Conversion
 # ===========================================
 
-def string_to_ints(text):
-    t = text.encode("utf-8")
-    out : list = list()
-    for i in range(len(t)):
-        out.append(int(t[i]))
-    return out
-
 def ints_to_string(int_list):
     out = ""
     for i in range(len(int_list)):
@@ -36,11 +29,7 @@ def ints_to_string(int_list):
 # Network Encoding
 # ===========================================
 
-def encode_ints(int_list, bytes_per_int = 4):
-    lsBytes : list = list()
-    for i in range(len(int_list)):
-        lsBytes.append(int_list[i].to_bytes(bytes_per_int, 'big'))
-    return lsBytes
+
 
 def decode_ints(data, bytes_per_int = 4):
     out : list = list()
@@ -48,19 +37,18 @@ def decode_ints(data, bytes_per_int = 4):
         out.append(int.from_bytes(data[i], 'big'))
     return out
 
-def decode (data, bytes_per_int = 4):
+def decody (data, bytes_per_int = 4):
+    print(type(data))
     out : str = ""
     for i in range(len(data)):
-        out += data[i].decode("utf-32-be")
+        out += data.decode()
     return out
 
 # ===========================================
 # ISC Message Creation
 # ===========================================
 
-def create_text_message(text, bytes_per_char = 4, isServer = False):
-    string = f"[ISC][t][{len(text)}][{encode_ints(string_to_ints(text), bytes_per_char)}]"
-    return string
+
 
 def create_image_message(width, hight, image_data):
     string = f"[ISC][i][{width}][{hight}][{encode_ints(image_data)}]"
