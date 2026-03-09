@@ -1,11 +1,10 @@
-
 def vigenere(msg, key):
     res = b""
     length = len(key)
 
     for i, char in enumerate(msg):
-        m = int.from_bytes(char.encode("utf-8"), byteorder="big") #transform the current character into a utf-8 byte in big endian 
-        k = int.from_bytes(key[i % length].encode("utf-8"), byteorder="big") #transform the key and for each character do a different mod with the current index we are in
+        m = int.from_bytes(char.encode("utf-8"), byteorder="big") #transform the current character into a utf-8 byte in big endian 4
+        k = int.from_bytes(key[i % length].encode("utf-8"), byteorder="big") #transform the key and for each character the key will change based on the idx
         c = m + k # apply the key to the caracter to encrypt (E(x) = m + k)
         res += c.to_bytes(4, byteorder="big") 
     
@@ -17,15 +16,15 @@ def decode_vigenere(msg, key):
     ky_idx = 0
 
     for c in range(0, len(msg), 4):
-        chunk = msg[c:c+4] 
-        charInt = int.from_bytes(chunk, byteorder="big")
-        k = key[ky_idx % length] 
-        m = charInt - ord(k) # D(x) = m - k -> D(E(x)) = x
+        chunk = msg[c:c+4] # takes the current character of the string based on the index
+        charInt = int.from_bytes(chunk, byteorder="big") # reformat it into int
+        
+        k = key[ky_idx % length] # revert the key 
+        m = charInt - ord(k) # D(x) = m - k -> D(E(x)) = x  (basically doing the inverse function)
         
         res += chr(m)
         ky_idx += 1
     return res 
-
 
 def vigenereByteless(msg, key):
     res = ""

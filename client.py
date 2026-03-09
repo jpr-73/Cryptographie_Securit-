@@ -3,7 +3,6 @@ import socket
 import sys
 import time
 import fonctions
-from fonctions import decode
 
 
 class Client:
@@ -36,16 +35,24 @@ class Client:
     
     def receive(self, timeout = 10.00) :
         try :
+            rcvd = ""
             #self.sock.settimeout(timeout)
             while True :
-                answer = self.sock.recv(4)
+                answer = self.sock.recv(4096)
                 if not answer :
                     print("Server disconnected")
                     sys.stdout.flush()
                 else :
-                    #print("received = " + str(answer))
-                    sys.stdout.write(f"\r\033[K[Message reçu]: {str(answer)}\n> ")
-                    sys.stdout.flush()
+                    
+                    rcvd += (answer).decode()
+                    if rcvd[:4] == "ISCt" :
+                        sys.stdout.write(f"\r\033[K[Message reçu]: {rcvd[4:]}\n> ")
+                        sys.stdout.flush()
+                        rcvd = ""
+                        
+                        
+
+
         except socket.timeout:
             print("Connection Time out")
             sys.stdout.flush()

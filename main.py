@@ -1,6 +1,7 @@
 import cliText
 import interpretCommand
 import client
+import buffer
 #Project by Aurélien Santi - Alexandre Raccurt - Gabriel Zeizer
 
 import socket
@@ -15,6 +16,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print(host, port)
 
 client1 = client.Client()
+buff1 = buffer.Buffer()
 
 def main():
     working = True
@@ -34,19 +36,7 @@ def main():
 
 
 
-# shift a message by a key that has to be a int or a single character
-# make sure to convert the shifted message in the right unicode in big-endian order
 
-def shift(msg, key):
-    res = b""
-    s = int(key)
-
-    for c in msg:
-        charInt = int.from_bytes(c.encode("utf-8"), byteorder="big")
-        charInt += s
-        charByte = charInt.to_bytes(4, byteorder="big")
-        res += charByte
-    return res
         
 # decode the shifted message from byte and big-endian order to a string to be readable 
 # for the user
@@ -55,9 +45,9 @@ def decode_shift(msg, key):
     res = ""
     s = int(key)
 
-    for c in range(0, len(msg), 4):
-        chunk = msg[c:c+4]
-        charInt = int.from_bytes(chunk, byteorder="big")
+    for c in range(0, len(msg), 4): # 
+        chunk = msg[c:c+4] 
+        charInt = int.from_bytes(chunk, byteorder="big") #
         charInt -= s
         res += chr(charInt)
     return res
@@ -67,9 +57,9 @@ def vigenere(msg, key):
     length = len(key)
 
     for i, char in enumerate(msg):
-        m = int.from_bytes(char.encode("utf-8"), byteorder="big") #transform the current character into a utf-8 byte in big endian 
-        k = int.from_bytes(key[i % length].encode("utf-8"), byteorder="big") #transform the key and for each character do a different mod with the current index we are in
-        c = m + k # apply the key to the caracter to encrypt (E(x) = m + k)
+        m = int.from_bytes(char.encode("utf-8"), byteorder="big")
+        k = int.from_bytes(key[i % length].encode("utf-8"), byteorder="big") 
+        c = m + k 
         res += c.to_bytes(4, byteorder="big") 
     
     return res
@@ -81,10 +71,10 @@ def decode_vigenere(msg, key):
 
     for c in range(0, len(msg), 4):
         chunk = msg[c:c+4] 
-        charInt = int.from_bytes(chunk, byteorder="big")
+        charInt = int.from_bytes(chunk, byteorder="big") 
         
         k = key[ky_idx % length] 
-        m = charInt - ord(k) # D(x) = m - k -> D(E(x)) = x
+        m = charInt - ord(k) 
         
         res += chr(m)
         ky_idx += 1

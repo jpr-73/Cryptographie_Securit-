@@ -13,5 +13,7 @@ def printCommandHeader():
     print("=========================")
     print("/help")
     print("/send <text>")
+    print("/set")
+    print("/shift")
     print("/exit")
     print()
