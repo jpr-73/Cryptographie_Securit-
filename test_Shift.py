@@ -19,13 +19,12 @@ def decode_shift(msg, key):
     res = ""
     s = int(key)
 
-    for c in range(0, len(msg), 4):
-        chunk = msg[c:c+4]
-        charInt = int.from_bytes(chunk, byteorder="big")
+    for c in range(0, len(msg), 4): # 
+        chunk = msg[c:c+4] # takes the current character of the string based on the index
+        charInt = int.from_bytes(chunk, byteorder="big") #
         charInt -= s
         res += chr(charInt)
     return res
-
 
 
 test_shift = shift("hello", "123")
