@@ -27,7 +27,6 @@ def findKey():
     match mode_var.get():
         case "Single Shift":
             getKeyCommand = ("/send -s task " + "shift encode " + f"{len(inputtext.get())}")
-            print(getKeyCommand)
         case "Vigenere":
             getKeyCommand = ("/send -s task " + "vigenere encode " + f"{len(inputtext.get())}")
         case "RSA":
