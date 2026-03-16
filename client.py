@@ -3,6 +3,7 @@ import socket
 import sys
 import time
 import fonctions
+import main
 
 
 class Client:
@@ -43,10 +44,24 @@ class Client:
                     print("Server disconnected")
                     sys.stdout.flush()
                 else :
-                    
-                    rcvd += (answer).decode()
+                    data = answer[6:]
+                    clean_text = ""
+                    for i in range(0, len(data), 4):
+                        clean_text += chr(data[i+3])
+
+                    rcvd += (answer).decode("latin-1", errors="replace")
                     if rcvd[:4] == "ISCt" :
-                        sys.stdout.write(f"\r\033[K[Message reçu]: {rcvd[4:]}\n> ")
+                        sys.stdout.write(f"\r\033[K[MSG]: {clean_text}\n> ")
+                        sys.stdout.flush()
+                        rcvd = ""
+                    elif rcvd[:4] == "ISCs" :
+                        sys.stdout.write(f"\r\033[K[SERVER]: {clean_text}\n> ")
+                        buff1 = main.buff1
+                        buff1.content = clean_text
+                        sys.stdout.flush()
+                        rcvd = ""
+                    else :
+                        sys.stdout.write(f"\r\033[K[Bizarrerie]: {rcvd}\n> ")
                         sys.stdout.flush()
                         rcvd = ""
                         
