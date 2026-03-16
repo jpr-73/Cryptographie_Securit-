@@ -25,22 +25,54 @@ def interpret(line) :
                     toSend = message1.create_text_message() 
                     main.client1.send(toSend)
                     
-
-                    #if len(splitted) > 1 :
-                    #    for el in splitted
-                    #        message = splitted[1]
                     return True
+                
                 case "set" :
-                    None
+                    buff1.content = " ".join(splitted[1:])
+                    print("[Buffer setted to :] " + buff1.content)
+                    return True
+                
+                case "clear" :
+                    buff1.errase
+                    print("[Buffer errased :] " + buff1.content)
+                    return True
+                
+                case "show" :
+                    print("[Buffer :] " + buff1.content)
+                    return True
+                
                 case "encode" :
+                    if buff1.content == "" : 
+                        print("You have to set the buffer before to encode it")
+                        return True
                     match splitted[1] :
                         case "shift" :
-                            shifted = shift(" ".join(splitted[2:]), buff1)
+                            if len(splitted[2:]) == 0:
+                                print("[Missing key : /encode shift <key>] ")
+                                return True
+                            
+                            else :
+                                #shifted = shift(buff1.content, " ".join(splitted[2:]))
+                                shiftedText = shift2(buff1.content, " ".join(splitted[2:]))
+                                try :
+                                    #print("shifted message = " + shifted.decode())
+                                    print("shifted message = " + shiftedText)
 
-                            message1 = message.Message("s", shifted)
-                            toSend = message1.create_text_message()
-                            print("message = " + toSend.decode())
-                            main.client1.send(toSend)
+                                    #message1 = message.Message("s", shifted.decode())
+                                    message1 = message.Message("s", shiftedText)
+                                    
+                                    toSend = message1.create_text_message() 
+                                    main.client1.send(toSend)
+                                except Exception as e:
+                                    print(f"Error : {e}")
+
+
+                                try :
+                                    print(type(shiftedText))
+
+                                except Exception as e:
+                                    print(f"Error : {e}")
+                        
 
                             return True
 
@@ -99,4 +131,13 @@ def shift(msg, key):
         charInt += s
         charByte = charInt.to_bytes(4, byteorder="big")
         res += charByte
+    return res
+
+
+def shift2(msg, key):
+    res = ""
+    s = int(key)
+
+    for c in msg:
+        res += chr(ord(c) + s)
     return res

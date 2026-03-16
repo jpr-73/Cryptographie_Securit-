@@ -60,7 +60,7 @@ def vigenere(msg, key):
         m = int.from_bytes(char.encode("utf-8"), byteorder="big")
         k = int.from_bytes(key[i % length].encode("utf-8"), byteorder="big") 
         c = m + k 
-        res += c.to_bytes(4, byteorder="big") 
+        res += c.to_bytes(4, byteorder="big")
     
     return res
 
