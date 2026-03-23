@@ -8,6 +8,8 @@ import interpretCommand
 sendingToServer = False
 connected = True
 getKeyCommand = ""
+lastline = ""
+serverhassentatext = False
 
 # ── Status Checker ────────────────────────────────────────────────────────────────
 def clearbutton():
@@ -24,6 +26,7 @@ def sendtoserver():
         
 
 def findKey():
+    global getKeyCommand
     match mode_var.get():
         case "Single Shift":
             getKeyCommand = ("/send -s task " + "shift encode " + f"{len(inputtext.get())}")
@@ -35,15 +38,27 @@ def findKey():
             getKeyCommand = ("/send -s task " + "diffiehellman encode " + f"{len(inputtext.get())}")
         case "Hashing":
             getKeyCommand = ("/send -s task " + "hashing encode " + f"{len(inputtext.get())}")
+        case "None":
+            getKeyCommand = (f"/send {inputtext.get()}")
 
 def findKeyButton():
     findKey()
     global getKeyCommand
+    global keyValue
     print(getKeyCommand)
     interpretCommand.interpret(getKeyCommand)
+    keyValue.set(len(inputtext.get()))
 
 def encodeButton():
-    print("Encode")
+    global keyValue
+    temp = str(keyValue.get().encode("utf-8")).replace("b'\\r\\x1b","")[:-3]
+    match mode_var.get():
+        case "Single Shift":
+            print(temp)
+            output = ("/encode shift " + temp)
+            print(output)
+            interpretCommand.interpret(output)
+
 
 def decodeButton():
     print("Decode")
@@ -52,9 +67,16 @@ def sendMessage():
     global sendingToServer
     if sendingToServer:
         text = inputtext.get()
-        interpretCommand.interpret(modeCommand + " " + text)
+        findKey()
+        print(getKeyCommand)
+        interpretCommand.interpret(getKeyCommand)
 
+def setBuffer():
+    global lastline
+    interpretCommand.interpret("/set " + lastline[1:])
 
+def showBuffer():
+    interpretCommand.interpret("/show")
 
 # ── GUI ────────────────────────────────────────────────────────────────
 root = tk.Tk()
@@ -73,7 +95,7 @@ topbarcolor = "green" if connected else "red"
 tk.Frame(root, bg=topbarcolor, height=4).pack(fill="x")
 
 # ── Layout ─────────────────────────────────────────────────────────────────
-left = tk.Frame(root, bg="#ececec", width=300)
+left = tk.Frame(root, bg="#ececec", width=350)
 left.pack(side="left", fill="y", padx=8, pady=8)
 left.pack_propagate(False)
 
@@ -113,16 +135,17 @@ tk.Button(right, text="Send Clear", command=clearbutton, bg="#ececec", fg="black
 r2 = tk.Frame(right, bg="#ececec")
 r2.pack(pady=4)
 mode_var = tk.StringVar(value="Single Shift")
-for m in ("Single Shift", "Vigenere", "RSA", "DiffieHellman", "Hashing"):
+for m in ("Single Shift", "Vigenere", "RSA", "DiffieHellman", "Hashing", "None"):
     tk.Radiobutton(r2, text=m, variable=mode_var, value=m,
                    indicatoron=False, width=11, bg="#ddd", fg="black",
                    selectcolor="white", relief="raised", command=findKey).pack(side="left", padx=2)
 
 # Key field
+keyValue = tk.StringVar()
 r3 = tk.Frame(right, bg="#ececec")
 r3.pack(fill="x", pady=10)
 tk.Label(r3, text="Key :", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(r3, relief="solid", bg="white", fg="black", bd=1).pack(side="left", fill="x", expand=True)
+tk.Entry(r3, relief="solid", bg="white", fg="black", bd=1, textvariable=keyValue).pack(side="left", fill="x", expand=True)
 
 # Encode / Decode / Find key
 r4 = tk.Frame(right, bg="#ececec")
@@ -140,6 +163,14 @@ output_box.pack(fill="x", pady=(12, 4))
 tk.Button(right, text="Send Encoded", bg="#ececec", relief="groove",
           width=14, command=sendMessage).pack(anchor="e")
 
+# Set Buffer
+tk.Button(right, text="Set Buffer", bg="#ececec", relief="groove",
+          width=14, command=setBuffer).pack(anchor="e")
+
+# Show Buffer
+tk.Button(right, text="Show Buffer", bg="#ececec", relief="groove",
+          width=14, command=showBuffer).pack(anchor="e")
+
 # ── ChatBox / Console Redirection ────────────────────────────────────────────────────────────────
 
 class TextRedirector:
@@ -147,17 +178,27 @@ class TextRedirector:
         self.widget = widget
         self.original_stream = original_stream
 
-    def write(self, string):
-        # Thread-safe GUI update
+    def write(self, output):
+        #GUI update
+        global lastline
+        global serverhassentatext
+        if serverhassentatext:
+            lastline = output.replace("[SERVER]: ", "")
+            serverhassentatext = False
+        if "[SERVER]: You are asked to encode the text in the following message with the shift-key" in output:
+            keyValue.set((output.replace("[SERVER]: You are asked to encode the text in the following message with the shift-key ", "").replace("[K", "").replace("> ", "")))
+            serverhassentatext = True
+
+
         def append_text():
             self.widget.config(state="normal")
-            self.widget.insert(tk.END, string)
+            self.widget.insert(tk.END, output.replace("[K", "").replace(">", ""))
             self.widget.config(state="disabled")
             self.widget.see(tk.END)
         self.widget.after(0, append_text)
         
         # Also write to the original console so input() still works visually in terminal
-        self.original_stream.write(string)
+        self.original_stream.write(output)
         self.original_stream.flush()
 
     def flush(self):
