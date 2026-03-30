@@ -88,7 +88,8 @@ class Client:
 
 
                 elif "ISCt" in stream :
-                    sys.stdout.write(f"\r\033[K[MSG]: {stream}\n> ")
+                    stream_text = stream[6:]
+                    sys.stdout.write(f"\r\033[K[MSG]: {stream_text}\n> ")
                     sys.stdout.flush()
                     self.buffer_bytes = b""
                     
