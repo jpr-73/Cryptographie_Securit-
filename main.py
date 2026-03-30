@@ -30,9 +30,14 @@ def setup_cli():
 
     cliText.printCommandHeader()
     while working:
-        print()
-        text = input(">")
-        working = interpretCommand.interpret(text)
+        try :
+            print()
+            text = input(">")
+            working = interpretCommand.interpret(text)
+        except Exception as e:
+            print(f"\n[!] Erreur : {e}")
+            working = True
+        
 
 def main():
     # Run the console input loop in a background thread
@@ -98,3 +103,19 @@ def decode_vigenere(msg, key):
 
 if __name__ == "__main__":
     main()
+
+
+
+
+###### OLD FUNCTIONS
+
+def shift(msg, key):
+    res = b""
+    s = int(key)
+
+    for c in msg:
+        charInt = int.from_bytes(c.encode("utf-8"), byteorder="big")
+        charInt += s
+        charByte = charInt.to_bytes(4, byteorder="big")
+        res += charByte
+    return res

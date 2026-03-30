@@ -1,6 +1,7 @@
 
 class Buffer:
     content = ""
+    int_content = []
 
     def __init__(self) : None
 

@@ -9,10 +9,10 @@ ISC_HEADER = b'ISC'
 # ===========================================
 
 def int_to_bytes(value:int, num_bytes:int) -> bytes:
-    return value.to_bytes(num_bytes, 'big')
+    return value.to_bytes(num_bytes, byteorder='big')
 
 def bytes_to_int(data:bytes) -> int:
-    return int.from_bytes(data, 'big')
+    return int.from_bytes(data, byteorder='big')
 
 
 # ===========================================
