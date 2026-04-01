@@ -17,5 +17,8 @@ def printCommandHeader():
     print("/show                - Show current buffer")
     print("/clear")
     print("/encode shift <key>  - Shift the buffer with the shift <key>")
+    print("/encode vigenere <key>  - Shift the buffer with the shift <key>")
+    print("/decode vigenere <key>  - Shift the buffer with the shift <key>")
+    print("/task shift|vigenere encode|decode <length>")
     print("/exit")
     print()

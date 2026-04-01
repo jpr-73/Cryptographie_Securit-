@@ -1,7 +1,6 @@
 import main
-import client
 import message
-import buffer
+import cliText
 
 def interpret(line) :
     buff1 = main.buff1
@@ -11,6 +10,7 @@ def interpret(line) :
             match splitted[0][1:] :
                 case "help" :
                     print("Nobody hears you")
+                    cliText.printCommandHeader()
                     return True
                 case "exit" :
                     print("Good Bye")
@@ -26,6 +26,15 @@ def interpret(line) :
                     main.client1.send(toSend)
                     
                     return True
+                
+                case "task" :
+                    splitted[0] = "task"
+                    message1 = message.Message("s", " ".join(splitted[0:]))
+                    toSend = message1.create_text_message() 
+                    
+                    main.client1.send(toSend)
+                    return True
+
                 
                 case "set" :
                     buff1.content = " ".join(splitted[1:])
@@ -52,14 +61,13 @@ def interpret(line) :
                                 return True
                             
                             else :
-                                #shifted = shift(buff1.content, " ".join(splitted[2:]))
-                                shiftedText = shift2(buff1.content, " ".join(splitted[2:]))
+                                shiftedText = shift_ints2(buff1.int_content, " ".join(splitted[2:]))
                                 try :
-                                    #print("shifted message = " + shifted.decode())
-                                    print("shifted message = " + shiftedText)
+                                    print("shifted message = ", shiftedText)
 
-                                    #message1 = message.Message("s", shifted.decode())
-                                    message1 = message.Message("s", shiftedText)
+                                    message1 = message.Message("s", "")
+
+                                    message1.ints = shiftedText
                                     
                                     toSend = message1.create_text_message() 
                                     main.client1.send(toSend)
@@ -78,19 +86,69 @@ def interpret(line) :
 
                         case "vigenere" :
                             print("will vigenere here")
+                            if len(splitted[2:]) == 0:
+                                print("[Missing key : /encode vigenere <key>] ")
+                                return True
+                            
+                            else :
+                                vigeneredText = vigenere(buff1.content, " ".join(splitted[2:]))
+                                try :
+                                    print("coucou")
+                                    #print("Vigenered message = " + vigeneredText)
+
+                                    message1 = message.Message("s", vigeneredText)
+                                    print("coucou2")
+                                    
+                                    toSend = message1.create_text_message()
+                                    print("coucou3") 
+                                    main.client1.send(toSend)
+                                    print("coucou4")
+                                except Exception as e:
+                                    print(f"Error : {e}")
+
+
+                                try :
+                                    print(type(vigeneredText))
+
+                                except Exception as e:
+                                    print(f"Error : {e}")
+
                             return True
 
                         case _ : 
                             print("Unknown Command")
                             return True
+
+                case "decode" :    
+                    if buff1.content == "" : 
+                        print("You have to set the buffer before to encode it")
+                        return True
+                    else :
+                        match splitted[1] :
+                            case "shift" :
+
+                                decode_shift(buff1.content)
+                                return True
+                            
+                            case "shift" :
+
+                                decode_shift(buff1.content)
+                                return True
+                            
+                            case _ :
+                                print("Unknown Command")
+                                return True
+                
                 case _ : 
                     print("Unknown Command")
                     return True
             
         else :
             print("Unknown Command")
+            return True
     else :
         print("not a command")
+        return True
 
 
 
@@ -123,21 +181,55 @@ def addMsgSize(n):
 # make sure to convert the shifted message in the right unicode in big-endian order
 
 def shift(msg, key):
-    res = b""
-    s = int(key)
-
-    for c in msg:
-        charInt = int.from_bytes(c.encode("utf-8"), byteorder="big")
-        charInt += s
-        charByte = charInt.to_bytes(4, byteorder="big")
-        res += charByte
-    return res
-
-
-def shift2(msg, key):
     res = ""
     s = int(key)
 
     for c in msg:
         res += chr(ord(c) + s)
+    return res
+
+def shift_ints2(ints, key):
+    s = int(key)
+    return [x + s for x in ints]
+
+def shift_ints(ints, key):
+    res = []
+    s = int(key)
+
+    for char in ints:
+        res.append(ord(char) + s)
+    return res
+
+def decode_shift(msg):
+
+    for i in range(1, 27) :
+        res = ""
+
+        for c in msg:
+            res += chr(ord(c) - i)
+        print("Key " + str(i) + " : " + res)
+
+
+def decode_shiftOLD(msg, key):
+    res = ""
+    s = int(key)
+
+    for c in range(0, len(msg), 4):
+        chunk = msg[c:c+4] 
+        charInt = int.from_bytes(chunk, byteorder="big")
+        charInt -= s
+        res += chr(charInt)
+    return res
+
+#implemented vigenere
+def vigenere(msg, key):
+    res = ""
+    length = len(key)
+
+    for i, char in enumerate(msg):
+        m = int.from_bytes(char.encode("utf-8"), byteorder="big")
+        k = int.from_bytes(key[i % length].encode("utf-8"), byteorder="big") 
+        c = m + k 
+        res += c.to_bytes(4, byteorder="big")
+    
     return res

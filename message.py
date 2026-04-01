@@ -2,12 +2,14 @@ class Message():
     def __init__(self, type, message):
         self.type = type
         self.message = message
+        self.ints = []
         None
 
     
     def create_text_message(self, bytes_per_char = 4, isServer = False):
         #int_list = self.string_to_ints(self.message)
         int_list = [ord(c) for c in self.message]
+        int_list += self.ints
         real_length = len(int_list)
 
         header = ("ISC" + self.type).encode("ASCII")
@@ -19,6 +21,7 @@ class Message():
         bytesMessage = header + size_field + payload
         #bytesMessage = ("ISC" + self.type).encode("ASCII") + (len(self.message).to_bytes(2, byteorder="big")) + (b"".join(self.encode_ints(self.string_to_ints(self.message), bytes_per_char)))
         return bytesMessage
+    
     
     def string_to_ints(self, text):
         #t = text.encode("utf-8")
