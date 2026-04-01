@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import scrolledtext
 import sys
-import main
 import interpretCommand
 
 # ── Variables ────────────────────────────────────────────────────────────────
@@ -54,9 +53,7 @@ def encodeButton():
     temp = str(keyValue.get().encode("utf-8")).replace("b'\\r\\x1b","")[:-3]
     match mode_var.get():
         case "Single Shift":
-            print(temp)
             output = ("/encode shift " + temp)
-            print(output)
             interpretCommand.interpret(output)
 
 
@@ -77,6 +74,7 @@ def setBuffer():
 
 def showBuffer():
     interpretCommand.interpret("/show")
+
 
 # ── GUI ────────────────────────────────────────────────────────────────
 root = tk.Tk()
