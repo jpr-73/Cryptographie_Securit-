@@ -87,14 +87,19 @@ def decodeButton():
     match mode_var.get():
         case "Single Shift":
             getKeyCommand = ("/decode " + "shift " + f"{keyValue.get()}")
+            interpretCommand.interpret(getKeyCommand)
         case "Vigenere":
             getKeyCommand = ("/decode " + "vigenere " + f"{keyValue.get()}")
+            interpretCommand.interpret(getKeyCommand)
         case "RSA":
             getKeyCommand = ("/decode " + "rsa " + f"{keyValue.get()}")
+            interpretCommand.interpret(getKeyCommand)
         case "DiffieHellman":
             getKeyCommand = ("/decode " + "diffiehellman " + f"{keyValue.get()}")
+            interpretCommand.interpret(getKeyCommand)
         case "Hashing":
             getKeyCommand = ("/decode " + "hashing " + f"{keyValue.get()}")
+            interpretCommand.interpret(getKeyCommand)
         case "None":
             print(keyValue.get())
 
@@ -130,7 +135,8 @@ root.option_add("*Entry.insertBackground", "Black")
 
 # ── Top bar ────────────────────────────────────────────────────────────────
 topbarcolor = tk.StringVar(value="red")
-tk.Frame(root, bg=topbarcolor.get(), height=4).pack(fill="x")
+statusbar = tk.Frame(root, bg=topbarcolor.get(), height=4)
+statusbar.pack(fill="x")
 
 # ── Layout ─────────────────────────────────────────────────────────────────
 left = tk.Frame(root, bg="#ececec", width=350)
@@ -227,7 +233,7 @@ class TextRedirector:
         global connected
         global serverhassentatext
         global topbarcolor
-        global topbar
+        global statusbar
 
         if serverhassentatext:
             lastline = output.replace("[SERVER]: ", "")
@@ -242,6 +248,7 @@ class TextRedirector:
             connected = True
             if connected:
                 topbarcolor.set(value="green")
+                statusbar.config(bg=topbarcolor.get())
 
 
 
