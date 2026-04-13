@@ -127,9 +127,9 @@ def interpret(line) :
                                 decode_shift(buff1.content)
                                 return True
                             
-                            case "shift" :
+                            case "vigenere" :
 
-                                decode_shift(buff1.content)
+                                print("On va pas faire : pas le temps")
                                 return True
                             
                             case _ :
@@ -173,18 +173,6 @@ def addMsgSize(n):
 
     return size
 
-
-# shift a message by a key that has to be a int or a single character
-# make sure to convert the shifted message in the right unicode in big-endian order
-
-def shift(msg, key):
-    res = ""
-    s = int(key)
-
-    for c in msg:
-        res += chr(ord(c) + s)
-    return res
-
 def shift_ints(ints, key):
     s = int(key)
     return [x + s for x in ints]
@@ -198,30 +186,6 @@ def decode_shift(msg):
         for c in msg:
             res += chr(ord(c) - i)
         print("Key " + str(i) + " : " + res)
-
-
-def decode_shiftOLD(msg, key):
-    res = ""
-    s = int(key)
-
-    for c in range(0, len(msg), 4):
-        chunk = msg[c:c+4] 
-        charInt = int.from_bytes(chunk, byteorder="big")
-        charInt -= s
-        res += chr(charInt)
-    return res
-
-def vigenere(msg, key):
-    res = ""
-    length = len(key)
-
-    for i, char in enumerate(msg):
-        m = int.from_bytes(char.encode("utf-8"), byteorder="big")
-        k = int.from_bytes(key[i % length].encode("utf-8"), byteorder="big") 
-        c = m + k
-        res += c.to_bytes(4, byteorder="big")
-    
-    return res
 
 
 #implemented vigenere
