@@ -37,8 +37,9 @@ def interpret(line) :
 
                 
                 case "set" :
-                    buff1.content = " ".join(splitted[1:])
-                    print("[Buffer setted to :] " + buff1.content)
+                    buff1.set_content(" ".join(splitted[1:]))
+                    print(f"[Buffer setted to :] {buff1.content} ")
+                    print(f"[Buffer Int setted to :] {buff1.int_content} ")
                     return True
                 
                 case "clear" :
@@ -61,7 +62,7 @@ def interpret(line) :
                                 return True
                             
                             else :
-                                shiftedText = shift_ints2(buff1.int_content, " ".join(splitted[2:]))
+                                shiftedText = shift_ints(buff1.int_content, " ".join(splitted[2:]))
                                 try :
                                     print("shifted message = ", shiftedText)
 
@@ -85,24 +86,20 @@ def interpret(line) :
                             return True
 
                         case "vigenere" :
-                            print("will vigenere here")
                             if len(splitted[2:]) == 0:
                                 print("[Missing key : /encode vigenere <key>] ")
                                 return True
                             
                             else :
-                                vigeneredText = vigenere(buff1.content, " ".join(splitted[2:]))
+                                vigeneredText = vigenere_ints(buff1.int_content, " ".join(splitted[2:]))
                                 try :
-                                    print("coucou")
-                                    #print("Vigenered message = " + vigeneredText)
 
-                                    message1 = message.Message("s", vigeneredText)
-                                    print("coucou2")
+                                    message1 = message.Message("s", "")
+
+                                    message1.ints = vigeneredText
                                     
                                     toSend = message1.create_text_message()
-                                    print("coucou3") 
                                     main.client1.send(toSend)
-                                    print("coucou4")
                                 except Exception as e:
                                     print(f"Error : {e}")
 
@@ -188,17 +185,10 @@ def shift(msg, key):
         res += chr(ord(c) + s)
     return res
 
-def shift_ints2(ints, key):
+def shift_ints(ints, key):
     s = int(key)
     return [x + s for x in ints]
 
-def shift_ints(ints, key):
-    res = []
-    s = int(key)
-
-    for char in ints:
-        res.append(ord(char) + s)
-    return res
 
 def decode_shift(msg):
 
@@ -221,7 +211,6 @@ def decode_shiftOLD(msg, key):
         res += chr(charInt)
     return res
 
-#implemented vigenere
 def vigenere(msg, key):
     res = ""
     length = len(key)
@@ -229,7 +218,25 @@ def vigenere(msg, key):
     for i, char in enumerate(msg):
         m = int.from_bytes(char.encode("utf-8"), byteorder="big")
         k = int.from_bytes(key[i % length].encode("utf-8"), byteorder="big") 
-        c = m + k 
+        c = m + k
         res += c.to_bytes(4, byteorder="big")
     
+    return res
+
+
+#implemented vigenere
+def vigenere_ints(msg, key):
+    res = []
+    
+    if isinstance(key, str):
+        key = [ord(k) for k in key]
+        
+    length = len(key)
+
+    for i in range(len(msg)):
+        m = msg[i]          
+        k = key[i % length]
+        
+        res.append(m + k)   
+        
     return res
