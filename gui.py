@@ -5,15 +5,25 @@ import interpretCommand
 
 # ── Variables ────────────────────────────────────────────────────────────────
 sendingToServer = False
-connected = True
+connected = False
 getKeyCommand = ""
 lastline = ""
 serverhassentatext = False
 
 # ── Status Checker ────────────────────────────────────────────────────────────────
 def clearbutton():
-    inputtext.set("")
-    input_box.delete(0)
+    global getKeyCommand
+    global sendingToServer
+    if (sendingToServer==False) :
+        getKeyCommand = (f"/send {inputtext.get()}")
+        interpretCommand.interpret(getKeyCommand)
+        inputtext.set("")
+        input_box.delete(0)
+    else :
+        getKeyCommand = (f"/send -s {inputtext.get()}")
+        interpretCommand.interpret(getKeyCommand)
+        inputtext.set("")
+        input_box.delete(0)
 
 def sendtoserver():
     global sendingToServer
@@ -50,27 +60,57 @@ def findKeyButton():
 
 def encodeButton():
     global keyValue
+    global mode_var
     temp = str(keyValue.get().encode("utf-8")).replace("b'\\r\\x1b","")[:-3]
     match mode_var.get():
         case "Single Shift":
             output = ("/encode shift " + temp)
             interpretCommand.interpret(output)
+        case "Vigenere":
+            output = ("/encode vigenere " + temp)
+            interpretCommand.interpret(output)
+        case "RSA":
+            output = ("/encode RSA " + temp)
+            interpretCommand.interpret(output)
+        case "DiffieHellman":
+            output = ("/encode diffiehellman " + temp)
+            interpretCommand.interpret(output)
+        case "Hashing":
+            output = ("/encode hashing " + temp)
+            interpretCommand.interpret(output)
 
 
 def decodeButton():
-    print("Decode")
+    global mode_var
+    global getKeyCommand
+    global keyValue
+    match mode_var.get():
+        case "Single Shift":
+            getKeyCommand = ("/decode " + "shift " + f"{keyValue.get()}")
+        case "Vigenere":
+            getKeyCommand = ("/decode " + "vigenere " + f"{keyValue.get()}")
+        case "RSA":
+            getKeyCommand = ("/decode " + "rsa " + f"{keyValue.get()}")
+        case "DiffieHellman":
+            getKeyCommand = ("/decode " + "diffiehellman " + f"{keyValue.get()}")
+        case "Hashing":
+            getKeyCommand = ("/decode " + "hashing " + f"{keyValue.get()}")
+        case "None":
+            print(keyValue.get())
+
 
 def sendMessage():
     global sendingToServer
     if sendingToServer:
-        text = inputtext.get()
         findKey()
         print(getKeyCommand)
         interpretCommand.interpret(getKeyCommand)
 
+'''
 def setBuffer():
     global lastline
     interpretCommand.interpret("/set " + lastline[1:])
+'''
 
 def showBuffer():
     interpretCommand.interpret("/show")
@@ -89,8 +129,8 @@ root.option_add("*Entry.highlightBackground", "#ececec")
 root.option_add("*Entry.insertBackground", "Black")
 
 # ── Top bar ────────────────────────────────────────────────────────────────
-topbarcolor = "green" if connected else "red"
-tk.Frame(root, bg=topbarcolor, height=4).pack(fill="x")
+topbarcolor = tk.StringVar(value="red")
+tk.Frame(root, bg=topbarcolor.get(), height=4).pack(fill="x")
 
 # ── Layout ─────────────────────────────────────────────────────────────────
 left = tk.Frame(root, bg="#ececec", width=350)
@@ -157,13 +197,18 @@ tk.Button(r4, text="Find key", bg="#ececec", relief="groove", width=20, command=
 output_box = scrolledtext.ScrolledText(right, height=4, bg="white", relief="solid", bd=1)
 output_box.pack(fill="x", pady=(12, 4))
 
+'''
 # Send Encoded
 tk.Button(right, text="Send Encoded", bg="#ececec", relief="groove",
           width=14, command=sendMessage).pack(anchor="e")
 
+'''
+
+'''
 # Set Buffer
 tk.Button(right, text="Set Buffer", bg="#ececec", relief="groove",
           width=14, command=setBuffer).pack(anchor="e")
+'''
 
 # Show Buffer
 tk.Button(right, text="Show Buffer", bg="#ececec", relief="groove",
@@ -179,13 +224,25 @@ class TextRedirector:
     def write(self, output):
         #GUI update
         global lastline
+        global connected
         global serverhassentatext
+        global topbarcolor
+        global topbar
+
         if serverhassentatext:
             lastline = output.replace("[SERVER]: ", "")
             serverhassentatext = False
         if "[SERVER]: You are asked to encode the text in the following message with the shift-key" in output:
             keyValue.set((output.replace("[SERVER]: You are asked to encode the text in the following message with the shift-key ", "").replace("[K", "").replace("> ", "")))
             serverhassentatext = True
+        if "[SERVER]: You are asked to encode the text in the following message with the vigenere key" in output:
+            keyValue.set((output.replace("[SERVER]: You are asked to encode the text in the following message with the vigenere key ", "").replace("[K", "").replace("> ", "")))
+            serverhassentatext = True
+        if "Connected successfully" in output:
+            connected = True
+            if connected:
+                topbarcolor.set(value="green")
+
 
 
         def append_text():
