@@ -58,29 +58,6 @@ def main():
 # decode the shifted message from byte and big-endian order to a string to be readable 
 # for the user
 
-def decode_shift(msg, key):
-    res = ""
-    s = int(key)
-
-    for c in range(0, len(msg), 4): # 
-        chunk = msg[c:c+4] 
-        charInt = int.from_bytes(chunk, byteorder="big") #
-        charInt -= s
-        res += chr(charInt)
-    return res
-
-def vigenere(msg, key):
-    res = b""
-    length = len(key)
-
-    for i, char in enumerate(msg):
-        m = int.from_bytes(char.encode("utf-8"), byteorder="big")
-        k = int.from_bytes(key[i % length].encode("utf-8"), byteorder="big") 
-        c = m + k 
-        res += c.to_bytes(4, byteorder="big")
-    
-    return res
-
 def decode_vigenere(msg, key):
     res = ""
     length = len(key)
@@ -103,19 +80,3 @@ def decode_vigenere(msg, key):
 
 if __name__ == "__main__":
     main()
-
-
-
-
-###### OLD FUNCTIONS
-
-def shift(msg, key):
-    res = b""
-    s = int(key)
-
-    for c in msg:
-        charInt = int.from_bytes(c.encode("utf-8"), byteorder="big")
-        charInt += s
-        charByte = charInt.to_bytes(4, byteorder="big")
-        res += charByte
-    return res
