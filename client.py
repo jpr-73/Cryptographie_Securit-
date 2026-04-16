@@ -77,7 +77,6 @@ class Client:
                         
                         if type == "ISCt" :
                             sys.stdout.write(f"\r\033[K[MSG]: {clean_text}\n> ")
-                            rcvd = ""
                         elif type == "ISCs" :
                             sys.stdout.write(f"\r\033[K[SERVER]: {clean_text}\n> ")
                             buff1 = main.buff1
