@@ -118,14 +118,10 @@ def interpret(line) :
                                 print("[Missing key : /encode RSA <n> <e>] ")
                                 return True
                             else :
-                                print("n " + " ".join(splitted[2:3]))
-                                print("e " + " ".join(splitted[3:]))
                                 rsaedText = encodeRSA_ints(buff1.int_content, " ".join(splitted[2:3]), " ".join(splitted[3:]))
                                 try :
-                                    print("encoded rsa message = ", rsaedText)
 
                                     message1 = message.Message("s", "")
-
                                     message1.ints = rsaedText
                                     
                                     toSend = message1.create_text_message() 
@@ -246,7 +242,6 @@ encryptedMsg = pow(encodedMsg, e, n)'''
 
 def encodeRSA_ints(msg, n, e):
     res = []
-    #print("hello + msg = " + str(msg) + " " + str(len(msg)))
     
     for i in range(len(msg)):
         res.append(pow(msg[i], int(e), int(n)))   
