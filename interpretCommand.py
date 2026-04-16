@@ -111,6 +111,31 @@ def interpret(line) :
                                     print(f"Error : {e}")
 
                             return True
+                        
+                        case "rsa" | "RSA" :
+                            print("rsa mode")
+                            if len(splitted[2:]) == 0:
+                                print("[Missing key : /encode RSA <n> <e>] ")
+                                return True
+                            else :
+                                print("n " + " ".join(splitted[2:3]))
+                                print("e " + " ".join(splitted[3:]))
+                                rsaedText = encodeRSA_ints(buff1.int_content, " ".join(splitted[2:3]), " ".join(splitted[3:]))
+                                try :
+                                    print("encoded rsa message = ", rsaedText)
+
+                                    message1 = message.Message("s", "")
+
+                                    message1.ints = rsaedText
+                                    
+                                    toSend = message1.create_text_message() 
+                                    main.client1.send(toSend)
+                                except Exception as e:
+                                    print(f"Error : {e}")
+                                
+                                return True
+
+                                
 
                         case _ : 
                             print("Unknown Command")
@@ -204,3 +229,27 @@ def vigenere_ints(msg, key):
         res.append(m + k)   
         
     return res
+
+
+#implemented encode RSA :
+# convert a txt string into a single large int one byte per char
+'''def encodeMessage(msg):
+    encodedMsg = 0
+    for char in msg:
+        encodedMsg = encodedMsg << 8
+        encodedMsg = encodedMsg ^ ord(char)
+    return encodedMsg
+
+
+encodedMsg = encodeMessage(msg)
+encryptedMsg = pow(encodedMsg, e, n)'''
+
+def encodeRSA_ints(msg, n, e):
+    res = []
+    #print("hello + msg = " + str(msg) + " " + str(len(msg)))
+    
+    for i in range(len(msg)):
+        res.append(pow(msg[i], int(e), int(n)))   
+
+    return res
+    

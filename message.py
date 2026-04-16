@@ -8,9 +8,15 @@ class Message():
     
     def create_text_message(self, bytes_per_char = 4, isServer = False):
         #int_list = self.string_to_ints(self.message)
-        int_list = [ord(c) for c in self.message]
-        int_list += self.ints
+        #int_list = [ord(c) for c in self.message]
+        int_list = []
+        if len(self.ints) > 0 :
+            int_list = self.ints
+        else :
+            int_list = [ord(c) for c in self.message]
         real_length = len(int_list)
+
+        print("real msg ssended = " + str(int_list))
 
         header = ("ISC" + self.type).encode("ASCII")
         size_field = real_length.to_bytes(2, byteorder="big")
@@ -20,6 +26,7 @@ class Message():
             payload += val.to_bytes(4, byteorder="big")
         bytesMessage = header + size_field + payload
         #bytesMessage = ("ISC" + self.type).encode("ASCII") + (len(self.message).to_bytes(2, byteorder="big")) + (b"".join(self.encode_ints(self.string_to_ints(self.message), bytes_per_char)))
+        print("bytemessage = " + str(bytesMessage))
         return bytesMessage
     
     

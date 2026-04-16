@@ -16,3 +16,9 @@ class Buffer:
             utf8_bytes = c.encode('utf-8')
             num = int.from_bytes(utf8_bytes, byteorder='little')
             self.int_content.append(num)
+
+    def set_ints(self, ints):
+        self.int_content =[]
+
+        for i in ints :
+            self.int_content.append(i)

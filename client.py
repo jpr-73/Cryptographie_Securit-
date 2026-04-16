@@ -36,34 +36,59 @@ class Client:
     
     def receive(self, timeout = 10.00) :
         try :
-            rcvd = ""
+            rcvd = b""
             #self.sock.settimeout(timeout)
             while True :
                 answer = self.sock.recv(4096)
                 if not answer :
                     print("Server disconnected")
                     sys.stdout.flush()
+                    break
                 else :
-                    data = answer[6:]
-                    clean_text = ""
-                    for i in range(0, len(data), 4):
-                        clean_text += chr(data[i+3])
+                    rcvd += answer
+                    while len(rcvd) >= 6 :
+                        if rcvd[:3] != b"ISC":
+                            rcvd = rcvd[1:]
+                            continue
 
-                    rcvd += (answer).decode("latin-1", errors="replace")
-                    if rcvd[:4] == "ISCt" :
-                        sys.stdout.write(f"\r\033[K[MSG]: {clean_text}\n> ")
+                        length = int.from_bytes(rcvd[4:6], byteorder="big")
+
+                        byte_length = length * 4
+                        msg_length = byte_length + 6
+
+                        if len(rcvd) < msg_length :
+                            break
+
+                        data = rcvd[6:msg_length]
+                        value = []
+                        clean_text = ""
+
+                        for i in range(0, len(data), 4):
+                            value.append(int.from_bytes(data[i:i+4], byteorder="big"))
+                            #clean_text += chr(data[i+3])
+
+                        try :
+                            clean_text = bytes(value).decode("utf-8")
+                        except :
+                            clean_text = "".join(chr(v) for v in value)
+
+                        
+                        type = "ISC" + rcvd[3:4].decode("latin-1", errors="replace")
+                        
+                        if type == "ISCt" :
+                            sys.stdout.write(f"\r\033[K[MSG]: {clean_text}\n> ")
+                            rcvd = ""
+                        elif type == "ISCs" :
+                            sys.stdout.write(f"\r\033[K[SERVER]: {clean_text}\n> ")
+                            buff1 = main.buff1
+                            buff1.set_content(clean_text)
+                            buff1.set_ints(value)
+                        else :
+                            sys.stdout.write(f"\r\033[K[Bizarrerie]: {rcvd}\n> ")
+                        
                         sys.stdout.flush()
-                        rcvd = ""
-                    elif rcvd[:4] == "ISCs" :
-                        sys.stdout.write(f"\r\033[K[SERVER]: {clean_text}\n> ")
-                        buff1 = main.buff1
-                        buff1.content = clean_text
-                        sys.stdout.flush()
-                        rcvd = ""
-                    else :
-                        sys.stdout.write(f"\r\033[K[Bizarrerie]: {rcvd}\n> ")
-                        sys.stdout.flush()
-                        rcvd = ""
+
+                        rcvd = rcvd[msg_length:]
                         
                         
 
