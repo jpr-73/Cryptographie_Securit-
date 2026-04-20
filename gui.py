@@ -55,11 +55,14 @@ def decodeTaskButton():
         case "Vigenere":
             interpretCommand.interpret("/send -s task " + "vigenere decode " + f"{int(inputtext.get())}")
         case "RSA":
-            interpretCommand.interpret("/send -s task " + "RSA decode " + f"{modValue.get()}" + " " + f"{keyValue.get()}")
+            interpretCommand.interpret("/task " + "RSA decode " + f"{modValue.get()}" + " " + f"{keyValue.get()}")
         case "DiffieHellman":
             interpretCommand.interpret("/send -s task " + "diffiehellman decode " + f"{int(inputtext.get())}")
         case "Hashing":
             interpretCommand.interpret("/send -s task " + "hashing decode " + f"{int(inputtext.get())}")
+
+def generateButton() :
+    interpretCommand.interpret("/generate")
 
 def encodeButton() :
     global mode_var
@@ -96,7 +99,7 @@ def decodeButton():
             getKeyCommand = ("/decode " + "vigenere " + f"{keyValue.get()}")
             interpretCommand.interpret(getKeyCommand)
         case "RSA":
-            getKeyCommand = ("/decode " + "rsa " + f"{keyValue.get()}")
+            getKeyCommand = ("/decode " + "rsa " + f"{keyValue.get()}" + f"{modValue.get()}" + f"{contentValue.get()}")
             interpretCommand.interpret(getKeyCommand)
         case "DiffieHellman":
             getKeyCommand = ("/decode " + "diffiehellman " + f"{keyValue.get()}")
@@ -178,11 +181,17 @@ tk.Entry(r3, relief="solid", bg="white", fg="black", bd=1, textvariable=keyValue
 
 # Modular field
 modValue = tk.StringVar()
-r3 = tk.Frame(right, bg="#ececec")
-r3.pack(fill="x", pady=10)
-tk.Label(r3, text="Modular :", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(r3, relief="solid", bg="white", fg="black", bd=1, textvariable=modValue).pack(side="left", fill="x", expand=True)
+r6 = tk.Frame(right, bg="#ececec")
+r6.pack(fill="x", pady=10)
+tk.Label(r6, text="Modular :", bg="#ececec", fg="black").pack(side="left")
+tk.Entry(r6, relief="solid", bg="white", fg="black", bd=1, textvariable=modValue).pack(side="left", fill="x", expand=True)
 
+# Content field
+contentValue = tk.StringVar()
+r7 = tk.Frame(right, bg="#ececec")
+r7.pack(fill="x", pady=10)
+tk.Label(r7, text="Content :", bg="#ececec", fg="black").pack(side="left")
+tk.Entry(r7, relief="solid", bg="white", fg="black", bd=1, textvariable=contentValue).pack(side="left", fill="x", expand=True)
 
 # Encode / Decode
 r4 = tk.Frame(right, bg="#ececec")
@@ -191,11 +200,12 @@ tk.Button(r4, text="Encode", bg="#ececec", relief="groove", width=15, command=en
 tk.Button(r4, text="Decode", bg="#ececec", relief="groove", width=15, command=decodeButton).pack(side="left", padx=4)
 
 
-# Task Encode / Task Decode
+# Task Encode / Task Decode / Generate
 r5 = tk.Frame(right, bg="#ececec")
 r5.pack(fill="x", pady=4)
 tk.Button(r5, text="Get Encode Task", bg="#ececec", relief="groove", width=15, command=encodeTaskButton).pack(side="left", padx=5)
 tk.Button(r5, text="Get Decode Task", bg="#ececec", relief="groove", width=15, command=decodeTaskButton).pack(side="left", padx=5)
+tk.Button(r5, text="Generate", bg="#ececec", relief="groove", width=15, command=generateButton).pack(side="left", padx=5)
 
 # ── ChatBox / Console Redirection ────────────────────────────────────────────────────────────────
 
