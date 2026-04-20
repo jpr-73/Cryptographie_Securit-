@@ -227,6 +227,7 @@ class TextRedirector:
             if connected:
                 topbarcolor.set(value="green")
                 statusbar.config(bg=topbarcolor.get())
+                root.attributes('-topmost', False)
 
 
         def append_text():
@@ -245,10 +246,6 @@ class TextRedirector:
 
 sys.stdout = TextRedirector(chat, sys.stdout)
 sys.stderr = TextRedirector(chat, sys.stderr)
-
-
-    
-
 
 if __name__ == "__main__":
     root.mainloop()
