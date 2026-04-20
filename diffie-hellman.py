@@ -2,93 +2,29 @@ import random
 import socket
 import message
 import client
+import main
 
 
-host = "vlbelintrocrypto.hevs.ch"  # Le nom du serveur
-port = 6000  # Le numéro de port du serveur
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host, port))
+def diffie_hellman_ints(p: int, g: int):
+    priv_key = random.randint(2, p-2)
+    pub_key = pow(g, priv_key, p)
+
+    msg_out = message.Message("s", str(pub_key))
+    main.client1.send(msg_out.create_text_message())
+    print(f"[DH] sent a public key: {pub_key}")
+
+    return priv_key, pub_key
 
 
-"""
-def addMsgHeader(msgType):
-    header = b"ISC"
+def compute_shared_sec(server_pub_int: list[int], priv_key:int, p:int):
+    server_pub_str = "".join(chr(i) for i in server_pub_int)
+    server_pub = int(server_pub_str.strip())
 
+    shared_secret = pow(server_pub, priv_key, p)
+    print(f"[DH] server public key: {server_pub}")
+    print(f"[DH] Shared secret : {shared_secret}")
 
-    if msgType == "t" or msgType == "T":
-        header += b"t"
-    elif msgType == "s" or msgType == "S":
-        header += b"s"
-    elif msgType == "i" or msgType == "I":
-        header += b"i"
+    return shared_secret
 
-    return header
-
-def addMsgSize(n):
-    size = b""
-    size += n.to_bytes(2, byteorder = "big")
-
-    return size
-
-"""
-
-
-
-def diffie_hellman(p, g):
-
-    cmd = message.Message("s", "task DifHel")
-    client.send(cmd.create_text_message())
-
-
-    privKey = random.randint(2, p-2)
-    pubKey = pow(g, privKey, p)
-    pubKeyBytes = pubKey.to_bytes((pubKey.bit_length() + 7) // 8, byteorder="big")
-    pubKeySize = len(pubKeyBytes)
-    msg = message.Message("s", str(pubKey))
-    client.send(msg.create_text_message())
-
-
-    #message = addMsgHeader("s") + addMsgSize(pubKeySize)+ pubKeyBytes
-
-    s.sendall(message)
-    otherPubKey = reception(b"s")
-    sharedSecret = pow(otherPubKey, privKey, p)
-
-    return sharedSecret
-
-
-def reception(type):
-    returnRecep= ""
-    test = True
-
-    while test: 
-        x = s.recv(6)
-        l = (int.from_bytes(x[-2:], byteorder='big')) * 4
-        msgType = chr(x[3]).encode("utf-8")
-
-        if msgType == type:
-            returnRecep += giveOriginalMsg(s.recv(l))
-            test = False
-        else:
-            s.recv(l)
-
-    return returnRecep
-
-def giveOriginalMsg(convertedMsg):
-    res = ""
-    conM = convertedMsg
-
-    while conM != b"":
-        charB = conM[:4]
-        conM = conM[4:]
-        a = charB.split(b"\x00")
-        num = a[len(a)-1]
-        res += num.decode("utf-8")
-
-    return res
-
-
-
-
-print(diffie_hellman(1009, 7))
-
+def shared_secret_ints(shared_secret: int):
+    return [ord(c) for c in str(shared_secret)]
