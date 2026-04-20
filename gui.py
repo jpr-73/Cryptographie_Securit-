@@ -47,8 +47,6 @@ def findKey():
             getKeyCommand = ("/send -s task " + "diffiehellman encode " + f"{len(inputtext.get())}")
         case "Hashing":
             getKeyCommand = ("/send -s task " + "hashing encode " + f"{len(inputtext.get())}")
-        case "None":
-            getKeyCommand = (f"/send {inputtext.get()}")
 
 def findKeyButton():
     findKey()
@@ -179,7 +177,7 @@ tk.Button(right, text="Send Clear", command=clearbutton, bg="#ececec", fg="black
 r2 = tk.Frame(right, bg="#ececec")
 r2.pack(pady=4)
 mode_var = tk.StringVar(value="Single Shift")
-for m in ("Single Shift", "Vigenere", "RSA", "DiffieHellman", "Hashing", "None"):
+for m in ("Single Shift", "Vigenere", "RSA", "DiffieHellman", "Hashing"):
     tk.Radiobutton(r2, text=m, variable=mode_var, value=m,
                    indicatoron=False, width=11, bg="#ddd", fg="black",
                    selectcolor="white", relief="raised", command=findKey).pack(side="left", padx=2)
