@@ -12,6 +12,40 @@ lastline = ""
 serverhassentatext = False
 
 # ── Status Checker ────────────────────────────────────────────────────────────────
+def update_visibility(*args):
+    r3.pack_forget()
+    r4.pack_forget()
+    r6.pack_forget()
+    r7.pack_forget()
+    r8.pack_forget()
+    r9.pack_forget()
+
+    selected_mode = mode_var.get()
+
+    if selected_mode == "Single Shift":
+        r3.pack(fill="x", pady=10, after=r2)
+        last_widget = r3
+
+    if selected_mode == "RSA":
+        r8.pack(fill="x", pady=10, after=r2)
+        r6.pack(fill="x", pady=10, after=r8)
+        last_widget = r6
+
+
+    elif selected_mode == "Vigenere":
+        pass
+
+    selected_mode2 = sub_mode1.get()
+    if selected_mode2 == "Encode":
+        r4.pack(fill="x", pady=10, after=last_widget)
+        
+        pass
+    if selected_mode2 == "Decode":
+        r7.pack(fill="x", pady=10, after=last_widget)
+        r9.pack(fill="x", pady=10, after=r7)
+        
+        pass
+
 def clearbutton():
     global getKeyCommand
     global sendingToServer
@@ -170,7 +204,15 @@ mode_var = tk.StringVar(value="Single Shift")
 for m in ("Single Shift", "Vigenere", "RSA", "DiffieHellman", "Hashing"):
     tk.Radiobutton(r2, text=m, variable=mode_var, value=m,
                    indicatoron=False, width=11, bg="#ddd", fg="black",
-                   selectcolor="white", relief="raised").pack(side="left", padx=2)
+                   selectcolor="white", relief="raised", command=update_visibility).pack(side="left", padx=2)
+
+r8 = tk.Frame(right, bg="#ececec")
+r8.pack(pady=4)
+sub_mode1 = tk.StringVar(value="Encode")
+for m2 in ("Encode", "Decode"):
+    tk.Radiobutton(r8, text=m2, variable=sub_mode1, value=m2,
+                   indicatoron=False, width=11, bg="#ddd", fg="black",
+                   selectcolor="white", relief="raised", command=update_visibility).pack(side="left", padx=2)
 
 # Key field
 keyValue = tk.StringVar()
@@ -197,7 +239,12 @@ tk.Entry(r7, relief="solid", bg="white", fg="black", bd=1, textvariable=contentV
 r4 = tk.Frame(right, bg="#ececec")
 r4.pack(fill="x", pady=4)
 tk.Button(r4, text="Encode", bg="#ececec", relief="groove", width=15, command=encodeButton).pack(side="left", padx=4)
-tk.Button(r4, text="Decode", bg="#ececec", relief="groove", width=15, command=decodeButton).pack(side="left", padx=4)
+
+
+r9 = tk.Frame(right, bg="#ececec")
+r9.pack(fill="x", pady=4)
+tk.Button(r9, text="Decode", bg="#ececec", relief="groove", width=15, command=decodeButton).pack(side="left", padx=4)
+
 
 
 # Task Encode / Task Decode / Generate
@@ -247,5 +294,6 @@ class TextRedirector:
 sys.stdout = TextRedirector(chat, sys.stdout)
 sys.stderr = TextRedirector(chat, sys.stderr)
 
+update_visibility()
 if __name__ == "__main__":
     root.mainloop()
