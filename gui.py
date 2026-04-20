@@ -47,6 +47,20 @@ def encodeTaskButton():
         case "Hashing":
             interpretCommand.interpret("/send -s task " + "hashing encode " + f"{int(inputtext.get())}")
 
+def decodeTaskButton():
+    global mode_var
+    match mode_var.get():
+        case "Single Shift":
+            interpretCommand.interpret("/send -s task " + "shift decode " + f"{int(inputtext.get())}")
+        case "Vigenere":
+            interpretCommand.interpret("/send -s task " + "vigenere decode " + f"{int(inputtext.get())}")
+        case "RSA":
+            interpretCommand.interpret("/send -s task " + "RSA decode " + f"{modValue.get()}" + " " + f"{keyValue.get()}")
+        case "DiffieHellman":
+            interpretCommand.interpret("/send -s task " + "diffiehellman decode " + f"{int(inputtext.get())}")
+        case "Hashing":
+            interpretCommand.interpret("/send -s task " + "hashing decode " + f"{int(inputtext.get())}")
+
 def encodeButton() :
     global mode_var
     temp = keyValue.get()
@@ -170,12 +184,18 @@ tk.Label(r3, text="Modular :", bg="#ececec", fg="black").pack(side="left")
 tk.Entry(r3, relief="solid", bg="white", fg="black", bd=1, textvariable=modValue).pack(side="left", fill="x", expand=True)
 
 
-# Encode / Decode / Task Encode
+# Encode / Decode
 r4 = tk.Frame(right, bg="#ececec")
 r4.pack(fill="x", pady=4)
 tk.Button(r4, text="Encode", bg="#ececec", relief="groove", width=15, command=encodeButton).pack(side="left", padx=4)
 tk.Button(r4, text="Decode", bg="#ececec", relief="groove", width=15, command=decodeButton).pack(side="left", padx=4)
-tk.Button(r4, text="Get Encode Task", bg="#ececec", relief="groove", width=15, command=encodeTaskButton).pack(side="left", padx=4)
+
+
+# Task Encode / Task Decode
+r5 = tk.Frame(right, bg="#ececec")
+r5.pack(fill="x", pady=4)
+tk.Button(r5, text="Get Encode Task", bg="#ececec", relief="groove", width=15, command=encodeTaskButton).pack(side="left", padx=5)
+tk.Button(r5, text="Get Decode Task", bg="#ececec", relief="groove", width=15, command=decodeTaskButton).pack(side="left", padx=5)
 
 # ── ChatBox / Console Redirection ────────────────────────────────────────────────────────────────
 
