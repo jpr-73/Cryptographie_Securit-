@@ -58,21 +58,82 @@ def interpret(line) :
                     return True
                 
                 case "generate" :
-                    primeSize = 2 ** 16 // 2
-                    p, q = getRandomPrime(primeSize)
-                    n, e, d = getKeys(p, q)
 
-                    print("[Info] : Your RSA public key (do not use - sended to server) is e=" + str(e))
-                    print("[Info] : Your RSA modular is n=" + str(n))
-                    print("[Info] : Your RSA private key is d=" + str(d))
+                    match splitted[1] :
+                        case "rsa" :
+                            primeSize = 2 ** 16 // 2
+                            p, q = getRandomPrime(primeSize)
+                            n, e, d = getKeys(p, q)
+
+                            print("[Info] : Your RSA public key (do not use - sended to server) is e=" + str(e))
+                            print("[Info] : Your RSA modular is n=" + str(n))
+                            print("[Info] : Your RSA private key is d=" + str(d))
+
+                            
+                            message1 = message.Message("s", str(n) + "," + str(e))
+                                
+                            toSend = message1.create_text_message() 
+                            main.client1.send(toSend)
+
+                            return True
+
+
+                        case "dh" :
+
+                            p = getOneRandomPrime(5000)
+
+                            generators = [3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
+                            generator = 2
+                            valid = False
+
+                            for el in generators :
+                                if isPrimitiveRoot(p, el) and not valid:
+                                    generator = el
+                                    valid = True
+
+                            print("[Info] : Your DH modular world is p=" + str(p))
+                            print("[Info] : Your DH generator world is g=" + str(generator))
+                            
+                            message1 = message.Message("s", str(p) + "," + str(generator))
+                            main.client1.send(message1.create_text_message())
+
+                            return True
+                        
+                        case "dh-hk" :
+                            #print("g=" + str(splitted[1]) + " p=" + str(splitted[2]))
+                            p = int(splitted[2])
+                            g = int(splitted[3])
+
+                            privKey = random.randint(2, p-2)
+                            pubKey = pow(g, privKey, p)
+
+                            print("[Info] : Your DH modular is g=" + str(g))
+                            print("[Info] : Your DH private key is p1=" + str(privKey))
+                            print("[Info] : Your DH public key is p2=" + str(pubKey))
+                            
+                            message1 = message.Message("s", str(pubKey))
+                            main.client1.send(message1.create_text_message())
+
+                            return True
+                        
+                        case "dh-secret" :
+                            p = int(splitted[2])
+                            privKey = int(splitted[3])
+                            pubKey = int(splitted[4])
+                            sharedSecret = pow(pubKey, privKey, p)
+
+                            print("[Info] : Your DH secret is " + str(sharedSecret))
+                            
+                            message1 = message.Message("s", str(sharedSecret))
+                            main.client1.send(message1.create_text_message())
+
+                            return True
+                        
+                        case _ :
+                            print("Unknown Command")
+                            return True
 
                     
-                    message1 = message.Message("s", str(n) + "," + str(e))
-                        
-                    toSend = message1.create_text_message() 
-                    main.client1.send(toSend)
-
-                    return True
                 
                 case "encode" :
                     if buff1.content == "" : 
@@ -324,6 +385,26 @@ def getRandomPrime(bound):
         while not isPrime(q):
             q =random.randint(3, bound) 
     return p, q
+
+'''For DH'''
+def getOneRandomPrime(bound):
+    p =random.randint(3, bound)
+    while not isPrime(p):
+        p =random.randint(3, bound)
+    return p
+
+def isPrimitiveRoot(p, generator):
+    checked = []
+
+    for i in range(1, p):
+        result = pow(generator, i, p)
+
+        if result not in checked :
+            checked.append(result)
+        else :
+            return False
+    return len(checked) == p-1
+        
 
 
 
