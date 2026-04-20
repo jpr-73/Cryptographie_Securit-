@@ -1,0 +1,6 @@
+task RSA encode (Int) : retourne : Modulo et clé publique du serveur / Texte a encoder
+encode rsa (Modulo) (clé publique) : Correct ou non
+
+task RSA decode (int) : (u need to give m and key)
+generate rsa : (m and key are generated and sending to server) / server answers with int list
+decode rsa (n modular) (private key) (int list)

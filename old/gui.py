@@ -33,23 +33,38 @@ def sendtoserver():
     else:
         sendingToServer = True
        
-def encodeTaskButton():
+def findKey():
+    global getKeyCommand
     global mode_var
     match mode_var.get():
         case "Single Shift":
-            interpretCommand.interpret("/send -s task " + "shift encode " + f"{int(inputtext.get())}")
+            getKeyCommand = ("/send -s task " + "shift encode " + f"{len(inputtext.get())}")
         case "Vigenere":
-            interpretCommand.interpret("/send -s task " + "vigenere encode " + f"{int(inputtext.get())}")
+            getKeyCommand = ("/send -s task " + "vigenere encode " + f"{len(inputtext.get())}")
         case "RSA":
-            interpretCommand.interpret("/send -s task " + "RSA encode " + f"{int(inputtext.get())}")
+            getKeyCommand = ("/send -s task " + "RSA encode " + f"{len(inputtext.get())}")
         case "DiffieHellman":
-            interpretCommand.interpret("/send -s task " + "diffiehellman encode " + f"{int(inputtext.get())}")
+            getKeyCommand = ("/send -s task " + "diffiehellman encode " + f"{len(inputtext.get())}")
         case "Hashing":
-            interpretCommand.interpret("/send -s task " + "hashing encode " + f"{int(inputtext.get())}")
+            getKeyCommand = ("/send -s task " + "hashing encode " + f"{len(inputtext.get())}")
 
-def encodeButton() :
+def findKeyRun():
+    findKey()
+    global getKeyCommand
+    global keyValue
+    print(getKeyCommand)
+    interpretCommand.interpret(getKeyCommand)
+    keyValue.set(len(inputtext.get()))
+    
+
+def encodeButton():
+    encodeTask()
+    
+
+def encodeTask() :
+    global keyValue
     global mode_var
-    temp = keyValue.get()
+    temp = str(keyValue.get().encode("utf-8")).replace("b'\\r\\x1b","")[:-3]
     match mode_var.get():
         case "Single Shift":
             output = ("/encode shift " + temp)
@@ -58,7 +73,7 @@ def encodeButton() :
             output = ("/encode vigenere " + temp)
             interpretCommand.interpret(output)
         case "RSA":
-            output = ("/encode RSA " + f"{modValue.get()}" + " " + f"{keyValue.get()}")
+            output = ("/encode RSA " + temp)
             interpretCommand.interpret(output)
         case "DiffieHellman":
             output = ("/encode diffiehellman " + temp)
@@ -66,8 +81,6 @@ def encodeButton() :
         case "Hashing":
             output = ("/encode hashing " + temp)
             interpretCommand.interpret(output)
-    keyValue.set("")
-    modValue.set("")
 
 
 def decodeButton():
@@ -92,6 +105,24 @@ def decodeButton():
             interpretCommand.interpret(getKeyCommand)
         case "None":
             print(keyValue.get())
+
+
+def sendMessage():
+    global sendingToServer
+    if sendingToServer:
+        findKey()
+        print(getKeyCommand)
+        interpretCommand.interpret(getKeyCommand)
+
+
+def setBuffer():
+    global lastline
+    interpretCommand.interpret("/set " + lastline[1:])
+
+
+def showBuffer():
+    interpretCommand.interpret("/show")
+
 
 # ── GUI ────────────────────────────────────────────────────────────────
 root = tk.Tk()
@@ -143,6 +174,7 @@ input_box.pack(fill="x", pady=(0, 6))
 
 
 # Send Clear
+
 tk.Button(right, text="Send Clear", command=clearbutton, bg="#ececec", fg="black", relief="groove",
           width=10).pack(anchor="e", pady=(2, 6))
 
@@ -153,7 +185,7 @@ mode_var = tk.StringVar(value="Single Shift")
 for m in ("Single Shift", "Vigenere", "RSA", "DiffieHellman", "Hashing"):
     tk.Radiobutton(r2, text=m, variable=mode_var, value=m,
                    indicatoron=False, width=11, bg="#ddd", fg="black",
-                   selectcolor="white", relief="raised").pack(side="left", padx=2)
+                   selectcolor="white", relief="raised", command=findKey).pack(side="left", padx=2)
 
 # Key field
 keyValue = tk.StringVar()
@@ -162,20 +194,34 @@ r3.pack(fill="x", pady=10)
 tk.Label(r3, text="Key :", bg="#ececec", fg="black").pack(side="left")
 tk.Entry(r3, relief="solid", bg="white", fg="black", bd=1, textvariable=keyValue).pack(side="left", fill="x", expand=True)
 
-# Modular field
-modValue = tk.StringVar()
-r3 = tk.Frame(right, bg="#ececec")
-r3.pack(fill="x", pady=10)
-tk.Label(r3, text="Modular :", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(r3, relief="solid", bg="white", fg="black", bd=1, textvariable=modValue).pack(side="left", fill="x", expand=True)
-
-
-# Encode / Decode / Task Encode
+# Encode / Decode / Find key
 r4 = tk.Frame(right, bg="#ececec")
 r4.pack(fill="x", pady=4)
-tk.Button(r4, text="Encode", bg="#ececec", relief="groove", width=15, command=encodeButton).pack(side="left", padx=4)
-tk.Button(r4, text="Decode", bg="#ececec", relief="groove", width=15, command=decodeButton).pack(side="left", padx=4)
-tk.Button(r4, text="Get Encode Task", bg="#ececec", relief="groove", width=15, command=encodeTaskButton).pack(side="left", padx=4)
+tk.Button(r4, text="Encode", bg="#ececec", relief="groove", width=20, command=encodeButton).pack(side="left", padx=4)
+tk.Button(r4, text="Decode", bg="#ececec", relief="groove", width=20, command=decodeButton).pack(side="left", padx=4)
+tk.Button(r4, text="Find key", bg="#ececec", relief="groove", width=20, command=findKeyRun).pack(side="left", padx=4)
+
+
+# Output box
+output_box = scrolledtext.ScrolledText(right, height=4, bg="white", relief="solid", bd=1)
+output_box.pack(fill="x", pady=(12, 4))
+
+'''
+# Send Encoded
+tk.Button(right, text="Send Encoded", bg="#ececec", relief="groove",
+          width=14, command=sendMessage).pack(anchor="e")
+
+'''
+
+'''
+# Set Buffer
+tk.Button(right, text="Set Buffer", bg="#ececec", relief="groove",
+          width=14, command=setBuffer).pack(anchor="e")
+'''
+
+# Show Buffer
+tk.Button(right, text="Show Buffer", bg="#ececec", relief="groove",
+          width=14, command=showBuffer).pack(anchor="e")
 
 # ── ChatBox / Console Redirection ────────────────────────────────────────────────────────────────
 
@@ -192,6 +238,15 @@ class TextRedirector:
         global topbarcolor
         global statusbar
 
+        if serverhassentatext:
+            lastline = output.replace("[SERVER]: ", "")
+            serverhassentatext = False
+        if "[SERVER]: You are asked to encode the text in the following message with the shift-key" in output:
+            keyValue.set((output.replace("[SERVER]: You are asked to encode the text in the following message with the shift-key ", "").replace("[K", "").replace("> ", "")))
+            serverhassentatext = True
+        if "[SERVER]: You are asked to encode the text in the following message with the vigenere key" in output:
+            keyValue.set((output.replace("[SERVER]: You are asked to encode the text in the following message with the vigenere key ", "").replace("[K", "").replace("> ", "")))
+            serverhassentatext = True
         if "Connected successfully" in output:
             connected = True
             if connected:
