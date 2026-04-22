@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import scrolledtext
 import sys
 import interpretCommand
-import time
 
 # ── Variables ────────────────────────────────────────────────────────────────
 sendingToServer = False
@@ -13,136 +12,160 @@ serverhassentatext = False
 
 # ── Status Checker ────────────────────────────────────────────────────────────────
 def update_visibility(*args):
-    r3.pack_forget()
-    r4.pack_forget()
-    r6.pack_forget()
-    r7.pack_forget()
-    r8.pack_forget()
-    r9.pack_forget()
+    try:
+        r3.pack_forget()
+        r4.pack_forget()
+        r6.pack_forget()
+        r7.pack_forget()
+        r8.pack_forget()
+        r9.pack_forget()
+        r10.pack_forget()
 
-    selected_mode = mode_var.get()
+        selected_mode = mode_var.get()
 
-    if selected_mode == "Single Shift":
-        r3.pack(fill="x", pady=10, after=r2)
-        last_widget = r3
+        if selected_mode == "Single Shift":
+            r3.pack(fill="x", pady=10, after=r2)
+            r9.pack(fill="x", pady=10, after=r3)
 
-    if selected_mode == "RSA":
-        r8.pack(fill="x", pady=10, after=r2)
-        r6.pack(fill="x", pady=10, after=r8)
-        last_widget = r6
+            last_widget = r9
 
+        elif selected_mode == "RSA":
+            r8.pack(fill="x", pady=10, after=r2)
+            r6.pack(fill="x", pady=10, after=r8)
+            r10.pack(fill="x", pady=10, after=r6)
+            last_widget = r10
 
-    elif selected_mode == "Vigenere":
-        pass
+        elif selected_mode == "Vigenere":
+            pass
 
-    selected_mode2 = sub_mode1.get()
-    if selected_mode2 == "Encode":
-        r4.pack(fill="x", pady=10, after=last_widget)
-        
-        pass
-    if selected_mode2 == "Decode":
-        r7.pack(fill="x", pady=10, after=last_widget)
-        r9.pack(fill="x", pady=10, after=r7)
-        
-        pass
+        selected_mode2 = sub_mode1.get()
+        if selected_mode2 == "Encode":
+            r4.pack(fill="x", pady=10, after=last_widget)
+
+        if selected_mode2 == "Decode":
+            r7.pack(fill="x", pady=10, after=last_widget)
+            r9.pack(fill="x", pady=10, after=r7)
+    except Exception as e:
+        return
 
 def clearbutton():
     global getKeyCommand
     global sendingToServer
-    if (sendingToServer==False) :
-        getKeyCommand = (f"/send {inputtext.get()}")
-        interpretCommand.interpret(getKeyCommand)
-        inputtext.set("")
-        input_box.delete(0)
-    else :
-        getKeyCommand = (f"/send -s {inputtext.get()}")
-        interpretCommand.interpret(getKeyCommand)
-        inputtext.set("")
-        input_box.delete(0)
+    try:
+        if not sendingToServer:
+            getKeyCommand = f"/send {inputtext.get()}"
+            interpretCommand.interpret(getKeyCommand)
+            inputtext.set("")
+            input_box.delete(0, tk.END)
+        else:
+            getKeyCommand = f"/send -s {inputtext.get()}"
+            interpretCommand.interpret(getKeyCommand)
+            inputtext.set("")
+            input_box.delete(0, tk.END)
+    except Exception as e:
+        print(f"Error: {e}")
 
 def sendtoserver():
     global sendingToServer
-    if (sendingToServer == True):
-        sendingToServer = False
-    else:
-        sendingToServer = True
-       
+    try:
+        if sendingToServer:
+            sendingToServer = False
+        else:
+            sendingToServer = True
+    except Exception as e:
+        print(f"Error: {e}")
+
 def encodeTaskButton():
     global mode_var
-    match mode_var.get():
-        case "Single Shift":
-            interpretCommand.interpret("/send -s task " + "shift encode " + f"{int(inputtext.get())}")
-        case "Vigenere":
-            interpretCommand.interpret("/send -s task " + "vigenere encode " + f"{int(inputtext.get())}")
-        case "RSA":
-            interpretCommand.interpret("/send -s task " + "RSA encode " + f"{int(inputtext.get())}")
-        case "DiffieHellman":
-            interpretCommand.interpret("/send -s task " + "diffiehellman encode " + f"{int(inputtext.get())}")
-        case "Hashing":
-            interpretCommand.interpret("/send -s task " + "hashing encode " + f"{int(inputtext.get())}")
+    try:
+        match mode_var.get():
+            case "Single Shift":
+                interpretCommand.interpret("/send -s task shift encode " + inputtext.get())
+            case "Vigenere":
+                interpretCommand.interpret("/send -s task vigenere encode " + inputtext.get())
+            case "RSA":
+                interpretCommand.interpret("/send -s task RSA encode " + inputtext.get())
+            case "DiffieHellman":
+                interpretCommand.interpret("/send -s task diffiehellman encode " + inputtext.get())
+            case "Hashing":
+                interpretCommand.interpret("/send -s task hashing encode " + inputtext.get())
+    except Exception as e:
+        print(f"Error: {e}")
 
 def decodeTaskButton():
     global mode_var
-    match mode_var.get():
-        case "Single Shift":
-            interpretCommand.interpret("/send -s task " + "shift decode " + f"{int(inputtext.get())}")
-        case "Vigenere":
-            interpretCommand.interpret("/send -s task " + "vigenere decode " + f"{int(inputtext.get())}")
-        case "RSA":
-            interpretCommand.interpret("/task " + "RSA decode " + f"{modValue.get()}" + " " + f"{keyValue.get()}")
-        case "DiffieHellman":
-            interpretCommand.interpret("/send -s task " + "diffiehellman decode " + f"{int(inputtext.get())}")
-        case "Hashing":
-            interpretCommand.interpret("/send -s task " + "hashing decode " + f"{int(inputtext.get())}")
+    try:
+        match mode_var.get():
+            case "Single Shift":
+                interpretCommand.interpret("/send -s task shift decode " + inputtext.get())
+            case "Vigenere":
+                interpretCommand.interpret("/send -s task vigenere decode " + inputtext.get())
+            case "RSA":
+                interpretCommand.interpret("/task RSA decode " + inputtext.get())
+            case "DiffieHellman":
+                interpretCommand.interpret("/send -s task diffiehellman decode " + inputtext.get())
+            case "Hashing":
+                interpretCommand.interpret("/send -s task hashing decode " + inputtext.get())
+    except Exception as e:
+        print(f"Error: {e}")
 
-def generateButton() :
-    interpretCommand.interpret("/generate")
+def generateButton():
+    global mode_var
+    try:
+        match mode_var.get():
+            case "RSA":
+                interpretCommand.interpret("/generate rsa")
+            case "DiffieHellman":
+                interpretCommand.interpret("/generate dh")
+    except Exception as e:
+        print(f"Error: {e}")
 
-def encodeButton() :
+def encodeButton():
     global mode_var
     temp = keyValue.get()
-    match mode_var.get():
-        case "Single Shift":
-            output = ("/encode shift " + temp)
-            interpretCommand.interpret(output)
-        case "Vigenere":
-            output = ("/encode vigenere " + temp)
-            interpretCommand.interpret(output)
-        case "RSA":
-            output = ("/encode RSA " + f"{modValue.get()}" + " " + f"{keyValue.get()}")
-            interpretCommand.interpret(output)
-        case "DiffieHellman":
-            output = ("/encode diffiehellman " + temp)
-            interpretCommand.interpret(output)
-        case "Hashing":
-            output = ("/encode hashing " + temp)
-            interpretCommand.interpret(output)
-    keyValue.set("")
-    modValue.set("")
-
+    try:
+        match mode_var.get():
+            case "Single Shift":
+                output = f"/encode shift {temp}"
+                interpretCommand.interpret(output)
+            case "Vigenere":
+                output = f"/encode vigenere {temp}"
+                interpretCommand.interpret(output)
+            case "RSA":
+                output = f"/encode RSA {modValue.get()} {keyValue.get()}"
+                interpretCommand.interpret(output)
+            case "DiffieHellman":
+                output = f"/encode diffiehellman {temp}"
+                interpretCommand.interpret(output)
+            case "Hashing":
+                output = f"/encode hashing {temp}"
+                interpretCommand.interpret(output)
+        keyValue.set("")
+        modValue.set("")
+    except Exception as e:
+        print(f"Error: {e}")
 
 def decodeButton():
     global mode_var
-    global getKeyCommand
-    global keyValue
-    match mode_var.get():
-        case "Single Shift":
-            getKeyCommand = ("/decode " + "shift " + f"{keyValue.get()}")
-            interpretCommand.interpret(getKeyCommand)
-        case "Vigenere":
-            getKeyCommand = ("/decode " + "vigenere " + f"{keyValue.get()}")
-            interpretCommand.interpret(getKeyCommand)
-        case "RSA":
-            getKeyCommand = ("/decode " + "rsa " + f"{keyValue.get()}" + f"{modValue.get()}" + f"{contentValue.get()}")
-            interpretCommand.interpret(getKeyCommand)
-        case "DiffieHellman":
-            getKeyCommand = ("/decode " + "diffiehellman " + f"{keyValue.get()}")
-            interpretCommand.interpret(getKeyCommand)
-        case "Hashing":
-            getKeyCommand = ("/decode " + "hashing " + f"{keyValue.get()}")
-            interpretCommand.interpret(getKeyCommand)
-        case "None":
-            print(keyValue.get())
+    try:
+        match mode_var.get():
+            case "Single Shift":
+                getKeyCommand = f"/decode shift {keyValue.get()}"
+                interpretCommand.interpret(getKeyCommand)
+            case "Vigenere":
+                getKeyCommand = f"/decode vigenere {keyValue.get()}"
+                interpretCommand.interpret(getKeyCommand)
+            case "RSA":
+                getKeyCommand = f"/decode rsa {keyValue.get()} {modValue.get()} {contentValue.get()}"
+                interpretCommand.interpret(getKeyCommand)
+            case "DiffieHellman":
+                getKeyCommand = f"/decode diffiehellman {keyValue.get()}"
+                interpretCommand.interpret(getKeyCommand)
+            case "Hashing":
+                getKeyCommand = f"/decode hashing {keyValue.get()}"
+                interpretCommand.interpret(getKeyCommand)
+    except Exception as e:
+        print(f"Error: {e}")
 
 # ── GUI ────────────────────────────────────────────────────────────────
 root = tk.Tk()
@@ -192,12 +215,11 @@ inputtext = tk.StringVar()
 input_box = tk.Entry(right, bg="white", fg="black", relief="solid", borderwidth=0, bd=1, textvariable=inputtext)
 input_box.pack(fill="x", pady=(0, 6))
 
-
 # Send Clear
 tk.Button(right, text="Send Clear", command=clearbutton, bg="#ececec", fg="black", relief="groove",
           width=10).pack(anchor="e", pady=(2, 6))
 
-# Cipher tabs
+# Mode tabs
 r2 = tk.Frame(right, bg="#ececec")
 r2.pack(pady=4)
 mode_var = tk.StringVar(value="Single Shift")
@@ -235,24 +257,26 @@ r7.pack(fill="x", pady=10)
 tk.Label(r7, text="Content :", bg="#ececec", fg="black").pack(side="left")
 tk.Entry(r7, relief="solid", bg="white", fg="black", bd=1, textvariable=contentValue).pack(side="left", fill="x", expand=True)
 
-# Encode / Decode
+# Encode
 r4 = tk.Frame(right, bg="#ececec")
 r4.pack(fill="x", pady=4)
 tk.Button(r4, text="Encode", bg="#ececec", relief="groove", width=15, command=encodeButton).pack(side="left", padx=4)
 
-
+# Decode
 r9 = tk.Frame(right, bg="#ececec")
 r9.pack(fill="x", pady=4)
 tk.Button(r9, text="Decode", bg="#ececec", relief="groove", width=15, command=decodeButton).pack(side="left", padx=4)
 
-
-
-# Task Encode / Task Decode / Generate
+# Task Encode / Task Decode
 r5 = tk.Frame(right, bg="#ececec")
 r5.pack(fill="x", pady=4)
 tk.Button(r5, text="Get Encode Task", bg="#ececec", relief="groove", width=15, command=encodeTaskButton).pack(side="left", padx=5)
 tk.Button(r5, text="Get Decode Task", bg="#ececec", relief="groove", width=15, command=decodeTaskButton).pack(side="left", padx=5)
-tk.Button(r5, text="Generate", bg="#ececec", relief="groove", width=15, command=generateButton).pack(side="left", padx=5)
+
+# Generate
+r10 = tk.Frame(right, bg="#ececec")
+r10.pack(fill="x", pady=4)
+tk.Button(r10, text="Generate", bg="#ececec", relief="groove", width=15, command=generateButton).pack(side="left", padx=5)
 
 # ── ChatBox / Console Redirection ────────────────────────────────────────────────────────────────
 
@@ -262,7 +286,7 @@ class TextRedirector:
         self.original_stream = original_stream
 
     def write(self, output):
-        #GUI update
+        # GUI update
         global lastline
         global connected
         global serverhassentatext
@@ -276,14 +300,13 @@ class TextRedirector:
                 statusbar.config(bg=topbarcolor.get())
                 root.attributes('-topmost', False)
 
-
         def append_text():
             self.widget.config(state="normal")
             self.widget.insert(tk.END, output.replace("[K", "").replace(">", ""))
             self.widget.config(state="disabled")
             self.widget.see(tk.END)
         self.widget.after(0, append_text)
-        
+
         # Also write to the original console so input() still works visually in terminal
         self.original_stream.write(output)
         self.original_stream.flush()
