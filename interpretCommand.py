@@ -4,6 +4,7 @@ import cliText
 import base64
 import random
 from math import gcd
+from hashlib import sha256
 import math
 import sys
 
@@ -214,6 +215,21 @@ def interpret(line) :
                                     print(f"Error : {e}")
                                 
                                 return True
+                            
+                        case "hash" :
+
+                            digest = hash_ints(buff1.int_content)
+
+                            print("[Info] : Le texte hashé = " + str(digest))
+
+                            message1 = message.Message("s", "")
+                            message1.ints = digest
+
+                            toSend = message1.create_text_message() 
+
+                            main.client1.send(toSend)
+                        
+                            return True
 
                                 
 
@@ -247,6 +263,25 @@ def interpret(line) :
                                 
                                 toSend = message1.create_text_message()
                                 main.client1.send(toSend)
+                                return True
+                            
+                            case "hash" :
+
+                                verified = verify_hash(buff1.int_last_content, " ".join(splitted[2:3]))
+
+                                #print("[Info] : Le texte hashé = " + str(digest))
+                                print("[Info] : Le texte hashé correspond ? " + str(verified))
+
+                                reponse = "true" if verified else "false"
+
+                                message1 = message.Message("s", reponse)
+
+                                message1.ints = []
+
+                                toSend = message1.create_text_message()
+
+                                main.client1.send(toSend)
+                        
                                 return True
                             
                             case _ :
@@ -461,3 +496,28 @@ def decodeRSA_ints(msg_ints, n, d):
     print("[info] : decrypted message = " + text_message)
 
     return res
+
+
+"""la premiere fonction hach une list d'entier en utilisent sha256
+chaque entier est traiter comme un point de code unicode -> utf 8 -> haché
+c'est ensuite renvoyer sous forme de liste d'entier en hexdigest 
+poui le hexdigest est envoyé au serveur sous forme de message
+"""
+
+def hash_ints(ints: list[int]) :
+    text = "".join(chr(i) for i in ints)
+    raw_bytes = text.encode("utf-8")
+
+    digest = sha256(raw_bytes).hexdigest()
+
+    return [ord(c) for c in digest]
+
+"""cette fonction verifie simplement que la list d'entier haché est bien
+le hexdigest attendu"""
+
+def verify_hash(ints: list [int], expected_hex: str) :
+    text = "".join(chr(i) for i in ints)
+    raw_bytes = text.encode("utf-8")
+    digest = sha256(raw_bytes).hexdigest()
+
+    return digest == expected_hex
