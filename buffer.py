@@ -22,7 +22,7 @@ class Buffer:
             self.int_content.append(num)
 
     def set_ints(self, ints):
-        self.int_last_content = self.int_content.copy()
+        #self.int_last_content = self.int_content.copy()
         self.int_content =[]
 
         for i in ints :

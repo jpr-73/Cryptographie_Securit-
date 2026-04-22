@@ -219,7 +219,7 @@ def interpret(line) :
                         case "hash" :
 
                             digest = hash_ints(buff1.int_content)
-
+                            print("[Info] : buff1 content " + str(buff1.int_content))
                             print("[Info] : Le texte hashé = " + str(digest))
 
                             message1 = message.Message("s", "")
@@ -266,21 +266,27 @@ def interpret(line) :
                                 return True
                             
                             case "hash" :
+                                try :
 
-                                verified = verify_hash(buff1.int_last_content, " ".join(splitted[2:3]))
+                                    verified = verify_hash(buff1.int_last_content, buff1.content)
 
-                                #print("[Info] : Le texte hashé = " + str(digest))
-                                print("[Info] : Le texte hashé correspond ? " + str(verified))
+                                    print("[Info] : buff1 last content " + str(buff1.int_last_content))
+                                    print("[Info] : buff1 content " + str(buff1.int_content))
+                                    #print("[Info] : Le texte hashé = " + str(digest))
+                                    print("[Info] : Le texte hashé correspond ? " + str(verified))
 
-                                reponse = "true" if verified else "false"
+                                    reponse = "true" if verified else "false"
 
-                                message1 = message.Message("s", reponse)
+                                    message1 = message.Message("s", reponse)
 
-                                message1.ints = []
+                                    message1.ints = []
 
-                                toSend = message1.create_text_message()
+                                    toSend = message1.create_text_message()
 
-                                main.client1.send(toSend)
+                                    main.client1.send(toSend)
+                                
+                                except Exception as e:
+                                    print(f"Error : {e}")
                         
                                 return True
                             
@@ -505,10 +511,18 @@ poui le hexdigest est envoyé au serveur sous forme de message
 """
 
 def hash_ints(ints: list[int]) :
-    text = "".join(chr(i) for i in ints)
-    raw_bytes = text.encode("utf-8")
+    #text = "".join(chr(i) for i in ints)
+    #raw_bytes = text.encode("utf-8")
 
-    digest = sha256(raw_bytes).hexdigest()
+    #digest = sha256(raw_bytes).hexdigest()
+
+    raw_bytes2 = b""
+    for i in ints:
+        quatre_octets = i.to_bytes(4, byteorder="little")
+
+        raw_bytes2 += quatre_octets.replace(b'\x00', b'')
+    
+    digest = sha256(raw_bytes2).hexdigest()
 
     return [ord(c) for c in digest]
 
@@ -516,8 +530,21 @@ def hash_ints(ints: list[int]) :
 le hexdigest attendu"""
 
 def verify_hash(ints: list [int], expected_hex: str) :
-    text = "".join(chr(i) for i in ints)
-    raw_bytes = text.encode("utf-8")
-    digest = sha256(raw_bytes).hexdigest()
+
+    #text = "".join(chr(i) for i in ints)
+    #raw_bytes = text.encode("utf-8")
+
+    #Le fait de passer par un chr coromps les caractères sur plusieurs bytes comme les é, je les ai donc récupérés sur des quadrioctets et les inteprêter correctement
+    raw_bytes2 = b""
+    for i in ints:
+        quatre_octets = i.to_bytes(4, byteorder="little")
+
+        raw_bytes2 += quatre_octets.replace(b'\x00', b'')
+
+    digest = sha256(raw_bytes2).hexdigest()
+
+    print("digest = " + str(digest))
+    print("expected = " + str(expected_hex))
+
 
     return digest == expected_hex
