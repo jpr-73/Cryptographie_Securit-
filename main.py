@@ -1,17 +1,15 @@
+#Project by Aurélien Santi - Alexandre Raccurt - Gabriel Zeizer
 import cliText
 import interpretCommand
 import client
 import buffer
 import gui
-#Project by Aurélien Santi - Alexandre Raccurt - Gabriel Zeizer
-
 import socket
 import threading
 
 host = "vlbeintrocrypto.hevs.ch"
 port = 6000
 ip = ""
-help
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 print(host, port)
@@ -49,34 +47,6 @@ def main():
         gui.root.mainloop()
     except KeyboardInterrupt:
         pass
-
-
-
-
-
-        
-# decode the shifted message from byte and big-endian order to a string to be readable 
-# for the user
-
-def decode_vigenere(msg, key):
-    res = ""
-    length = len(key)
-    ky_idx = 0
-
-    for c in range(0, len(msg), 4):
-        chunk = msg[c:c+4] 
-        charInt = int.from_bytes(chunk, byteorder="big") 
-        
-        k = key[ky_idx % length] 
-        m = charInt - ord(k) 
-        
-        res += chr(m)
-        ky_idx += 1
-    return res 
-    
-
-
-
 
 if __name__ == "__main__":
     main()

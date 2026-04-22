@@ -24,7 +24,7 @@ def decode_vigenere(msg, key):
         
         res += chr(m)
         ky_idx += 1
-    return res 
+    return res
 
 def vigenereByteless(msg, key):
     res = ""

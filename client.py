@@ -1,8 +1,6 @@
 
 import socket
 import sys
-import time
-import fonctions
 import main
 
 
@@ -88,9 +86,6 @@ class Client:
                         sys.stdout.flush()
 
                         rcvd = rcvd[msg_length:]
-                        
-                        
-
 
         except socket.timeout:
             print("Connection Time out")
