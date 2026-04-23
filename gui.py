@@ -24,6 +24,16 @@ def update_visibility(*args):
         decodeTask.pack_forget()
         eField.pack_forget()
         dField.pack_forget()
+        getDifHelTask.pack_forget()
+        difHelGenSpace.pack_forget()
+        pField.pack_forget()
+        gField.pack_forget()
+        keyField.pack_forget()
+        difHelHalfKey.pack_forget()
+        privKeyField.pack_forget()
+        publKeyField.pack_forget()
+        difSendSecret.pack_forget()
+
 
         selected_mode = mode_var.get()
 
@@ -37,9 +47,15 @@ def update_visibility(*args):
 
         
         elif selected_mode == "DiffieHellman":
-            keyField.pack(fill="x", pady=10, after=modeTab)
-            encodeTask.pack(fill="x", pady=10, after=keyField)
-            last_widget = encodeTask
+            getDifHelTask.pack(fill="x", pady=10, after=modeTab)
+            difHelGenSpace.pack(fill="x", pady=10, after=getDifHelTask)
+            pField.pack(fill="x", pady=10, after=difHelGenSpace)
+            gField.pack(fill="x", pady=10, after=pField)
+            difHelHalfKey.pack(fill="x", pady=10, after=gField)
+            privKeyField.pack(fill="x", pady=10, after=difHelHalfKey)
+            publKeyField.pack(fill="x", pady=10, after=privKeyField)
+            difSendSecret.pack(fill="x", pady=10, after=publKeyField)
+            last_widget = difSendSecret
 
         elif selected_mode == "Hashing":
             pass
@@ -145,6 +161,36 @@ def decodeTaskButton():
     except Exception as e:
         print(f"Error: {e}")
 
+
+def getDifHelTaskButton():
+    try :
+        interpretCommand.interpret("/task DifHel")
+        empty_values()
+    except Exception as e:
+        print(f"Error: {e}")
+
+def difHelGenSpaceButton():
+    try :
+        interpretCommand.interpret("/generate dh")
+        empty_values()
+    except Exception as e:
+        print(f"Error: {e}")
+
+def difHelHalfKeyButton():
+    try :
+        interpretCommand.interpret(f"/generate dh-hk {pValue.get()} {gValue.get()}")
+        empty_values()
+    except Exception as e:
+        print(f"Error: {e}")
+
+def difHelSecretButton():
+    try :
+        print(f"/generate dh-secret {pValue.get()} {privKeyValue.get()} {publKeyValue.get()}")
+        interpretCommand.interpret(f"/generate dh-secret {pValue.get()} {privKeyValue.get()} {publKeyValue.get()}")
+        empty_values()
+    except Exception as e:
+        print(f"Error: {e}")
+
 def generateButton():
     global mode_var
     try:
@@ -170,7 +216,6 @@ def encodeButton():
                 output = f"/encode vigenere {temp}"
                 interpretCommand.interpret(output)
             case "RSA":
-                print(f"/encode RSA {modValue.get()} {eValue.get()}")
                 output = f"/encode RSA {modValue.get()} {eValue.get()}"
                 interpretCommand.interpret(output)
             case "DiffieHellman":
@@ -336,6 +381,55 @@ tk.Button(encodeTask, text="Get Encode Task", bg="#ececec", relief="groove", wid
 decodeTask = tk.Frame(right, bg="#ececec")
 decodeTask.pack(fill="x", pady=4)
 tk.Button(decodeTask, text="Get Decode Task", bg="#ececec", relief="groove", width=15, command=decodeTaskButton).pack(side="left", padx=5)
+
+# Get DifHel Task
+getDifHelTask = tk.Frame(right, bg="#ececec")
+getDifHelTask.pack(fill="x", pady=4)
+tk.Button(getDifHelTask, text="Get Diffie Hell Task", bg="#ececec", relief="groove", width=15, command=getDifHelTaskButton).pack(side="left", padx=5)
+
+# DifHel generate space
+difHelGenSpace = tk.Frame(right, bg="#ececec")
+difHelGenSpace.pack(fill="x", pady=4)
+tk.Button(difHelGenSpace, text="Generate Space", bg="#ececec", relief="groove", width=15, command=difHelGenSpaceButton).pack(side="left", padx=5)
+
+# modular p field
+pValue = tk.StringVar()
+pField = tk.Frame(right, bg="#ececec")
+pField.pack(fill="x", pady=10)
+tk.Label(pField, text="Modular p:", bg="#ececec", fg="black").pack(side="left")
+tk.Entry(pField, relief="solid", bg="white", fg="black", bd=1, textvariable=pValue).pack(side="left", fill="x", expand=True)
+
+# modular point g field
+gValue = tk.StringVar()
+gField = tk.Frame(right, bg="#ececec")
+gField.pack(fill="x", pady=10)
+tk.Label(gField, text="DH generator world g:", bg="#ececec", fg="black").pack(side="left")
+tk.Entry(gField, relief="solid", bg="white", fg="black", bd=1, textvariable=gValue).pack(side="left", fill="x", expand=True)
+
+# DifHel half key
+difHelHalfKey = tk.Frame(right, bg="#ececec")
+difHelHalfKey.pack(fill="x", pady=4)
+tk.Button(difHelHalfKey, text="Send Half Key", bg="#ececec", relief="groove", width=15, command=difHelHalfKeyButton).pack(side="left", padx=5)
+
+# Dif Hel private Key field
+privKeyValue = tk.StringVar()
+privKeyField = tk.Frame(right, bg="#ececec")
+privKeyField.pack(fill="x", pady=10)
+tk.Label(privKeyField, text="DH private key p1:", bg="#ececec", fg="black").pack(side="left")
+tk.Entry(privKeyField, relief="solid", bg="white", fg="black", bd=1, textvariable=privKeyValue).pack(side="left", fill="x", expand=True)
+
+# Dif Hel Server Public Key field
+publKeyValue = tk.StringVar()
+publKeyField = tk.Frame(right, bg="#ececec")
+publKeyField.pack(fill="x", pady=10)
+tk.Label(publKeyField, text="[SERVER] public key :", bg="#ececec", fg="black").pack(side="left")
+tk.Entry(publKeyField, relief="solid", bg="white", fg="black", bd=1, textvariable=publKeyValue).pack(side="left", fill="x", expand=True)
+
+# DifHel send secret
+difSendSecret = tk.Frame(right, bg="#ececec")
+difSendSecret.pack(fill="x", pady=4)
+tk.Button(difSendSecret, text="Send Secret", bg="#ececec", relief="groove", width=15, command=difHelSecretButton).pack(side="left", padx=5)
+
 
 # Encode
 encodeFrame = tk.Frame(right, bg="#ececec")
