@@ -1,13 +1,8 @@
 import main
 import message
 import cliText
-import base64
 import random
 import crypto
-from math import gcd
-from hashlib import sha256
-import math
-import sys
 
 def interpret(line) :
     buff1 = main.buff1
@@ -133,8 +128,6 @@ def interpret(line) :
                         case _ :
                             print("Unknown Command")
                             return True
-
-                    
                 
                 case "encode" :
                     if buff1.content == "" : 
@@ -188,13 +181,6 @@ def interpret(line) :
                                 except Exception as e:
                                     print(f"Error : {e}")
 
-
-                                try :
-                                    print(type(vigeneredText))
-
-                                except Exception as e:
-                                    print(f"Error : {e}")
-
                             return True
                         
                         case "rsa" | "RSA" :
@@ -229,9 +215,7 @@ def interpret(line) :
 
                             main.client1.send(toSend)
                         
-                            return True
-
-                                
+                            return True                                
 
                         case _ : 
                             print("Unknown Command")
@@ -241,7 +225,7 @@ def interpret(line) :
                         match splitted[1] :
                             case "shift" :
 
-                                crypto.decode_shift(buff1.content)
+                                crypto.decode_shift(buff1.int_content)
                                 return True
                             
                             case "vigenere" :

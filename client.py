@@ -3,7 +3,6 @@ import socket
 import sys
 import main
 
-
 class Client:
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -65,9 +64,18 @@ class Client:
                             value.append(int.from_bytes(data[i:i+4], byteorder="big"))
                             #clean_text += chr(data[i+3])
 
+                        raw_bytes2 = bytearray()
+                        for val in value:
+                            quatre_octets = val.to_bytes(4, byteorder="little")
+
+                            raw_bytes2 += quatre_octets.replace(b'\x00', b'')
+
                         try :
-                            clean_text = bytes(value).decode("utf-8")
+                            #clean_text = bytes(value).decode("utf-8")
+                            clean_text = raw_bytes2.decode("utf-8", errors="replace")
+
                         except :
+                            print("problem with utf-8")
                             clean_text = "".join(chr(v) for v in value)
 
                         

@@ -10,11 +10,21 @@ def shift_ints(ints, key):
 def decode_shift(msg):
 
     for i in range(1, 27) :
-        res = ""
 
-        for c in msg:
-            res += chr(ord(c) - i)
-        print("Key " + str(i) + " : " + res)
+        raw_bytes2 = bytearray()
+        for val in msg:
+            shifted_val = val - i
+
+            quatre_octets = shifted_val.to_bytes(4, byteorder="little")
+
+            raw_bytes2 += quatre_octets.replace(b'\x00', b'')
+
+        try :
+            print("Key " + str(i) + " = " + raw_bytes2.decode("utf-8", errors="replace") + " \n")
+
+        except :
+            print("problem with utf-8")
+
 
 
 #implemented vigenere
