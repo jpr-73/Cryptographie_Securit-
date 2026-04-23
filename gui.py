@@ -23,6 +23,7 @@ def update_visibility(*args):
         genBtn.pack_forget()
         decodeTask.pack_forget()
         eField.pack_forget()
+        dField.pack_forget()
 
         selected_mode = mode_var.get()
 
@@ -34,9 +35,26 @@ def update_visibility(*args):
             last_widget = decodeTask
 
         elif selected_mode == "RSA":
-            encETdec.pack(fill="x", pady=10, after=modeTab)
-            modField.pack(fill="x", pady=10, after=encETdec)
+            encETdec.pack(fill="x", pady=5, after=modeTab)
             last_widget = encETdec
+
+            selected_mode2 = sub_mode1.get()
+
+            if selected_mode2 == "Encode":
+                encodeTask.pack(fill="x", pady=10, after=last_widget)
+                modField.pack(fill="x", pady=10, after=encodeTask)
+                eField.pack(fill="x", pady=10, after=modField)
+                encodeFrame.pack(fill="x", pady=10, after=eField)
+
+            if selected_mode2 == "Decode":
+                decodeTask.pack(fill="x", pady=5, after=last_widget)
+                genBtn.pack(fill="x", pady=10, after=decodeTask)
+                modField.pack(fill="x", pady=10, after=genBtn)
+                dField.pack(fill="x", pady=10, after=modField)
+
+                contentField.pack(fill="x", pady=10, after=dField)
+                decodeFrame.pack(fill="x", pady=10, after=contentField)
+
 
         elif selected_mode == "Vigenere":
             keyField.pack(fill="x", pady=10, after=modeTab)
@@ -46,17 +64,7 @@ def update_visibility(*args):
             last_widget = decodeTask
             
 
-        selected_mode2 = sub_mode1.get()
-        if selected_mode2 == "Encode":
-            encodeTask.pack(fill="x", pady=10, after=last_widget)
-            eField.pack(fill="x", pady=10, after=encodeTask)
-            encodeFrame.pack(fill="x", pady=10, after=eField)
-
-        if selected_mode2 == "Decode":
-            decodeTask.pack(fill="x", pady=10, after=last_widget)
-            contentField.pack(fill="x", pady=10, after=decodeTask)
-            decodeFrame.pack(fill="x", pady=10, after=contentField)
-            genBtn.pack(fill="x", pady=10, after=decodeFrame)
+        
 
     except Exception as e:
         return
@@ -148,6 +156,7 @@ def encodeButton():
                 output = f"/encode vigenere {temp}"
                 interpretCommand.interpret(output)
             case "RSA":
+                print(f"/encode RSA {modValue.get()} {eValue.get()}")
                 output = f"/encode RSA {modValue.get()} {eValue.get()}"
                 interpretCommand.interpret(output)
             case "DiffieHellman":
@@ -158,6 +167,8 @@ def encodeButton():
                 interpretCommand.interpret(output)
         keyValue.set("")
         modValue.set("")
+        eValue.set("")
+        dValue.set("")
     except Exception as e:
         print(f"Error: {e}")
 
@@ -173,7 +184,7 @@ def decodeButton():
                 interpretCommand.interpret(getKeyCommand)
             case "RSA":
                 are_You_Stupid('k')
-                getKeyCommand = f"/decode rsa {keyValue.get()} {modValue.get()} {contentValue.get()}"
+                getKeyCommand = f"/decode rsa {modValue.get()} {dValue.get()} {contentValue.get()}"
                 interpretCommand.interpret(getKeyCommand)
             case "DiffieHellman":
                 getKeyCommand = f"/decode diffiehellman {keyValue.get()}"
@@ -275,12 +286,20 @@ modField.pack(fill="x", pady=10)
 tk.Label(modField, text="Modular :", bg="#ececec", fg="black").pack(side="left")
 tk.Entry(modField, relief="solid", bg="white", fg="black", bd=1, textvariable=modValue).pack(side="left", fill="x", expand=True)
 
+# public key field d
+dValue = tk.StringVar()
+dField = tk.Frame(right, bg="#ececec")
+dField.pack(fill="x", pady=10)
+tk.Label(dField, text="p :", bg="#ececec", fg="black").pack(side="left")
+tk.Entry(dField, relief="solid", bg="white", fg="black", bd=1, textvariable=dValue).pack(side="left", fill="x", expand=True)
+
+
 # e field
 eValue = tk.StringVar()
 eField = tk.Frame(right, bg="#ececec")
 eField.pack(fill="x", pady=10)
-tk.Label(modField, text="e :", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(modField, relief="solid", bg="white", fg="black", bd=1, textvariable=eValue).pack(side="left", fill="x", expand=True)
+tk.Label(eField, text="e :", bg="#ececec", fg="black").pack(side="left")
+tk.Entry(eField, relief="solid", bg="white", fg="black", bd=1, textvariable=eValue).pack(side="left", fill="x", expand=True)
 
 # Content field
 contentValue = tk.StringVar()
