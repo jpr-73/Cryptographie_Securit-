@@ -194,6 +194,8 @@ def are_You_Stupid(mode):
 # ── GUI ────────────────────────────────────────────────────────────────
 root = tk.Tk()
 root.title("Secret Communication Channel")
+icon_img = tk.PhotoImage(file="icon.png")
+root.iconphoto(True, icon_img)
 root.geometry("1000x600")
 root.attributes('-topmost', True)
 root.configure(bg="#ececec")
