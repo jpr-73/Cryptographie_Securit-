@@ -50,8 +50,7 @@ Send your answer as a plain server message (no command prefix).
 
 ## Status
 
-- [ ] TCP connection & ISC framing
-- [ ] Text & server message support
-- [ ] Image message support
-- [ ] Cryptographic modules
+- [x] TCP connection & ISC framing
+- [x] Text & server message support
+- [x] Cryptographic modules
 - [ ] GUI
