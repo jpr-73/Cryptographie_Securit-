@@ -1,6 +1,10 @@
 '''File with all the crypto logic'''
 
 
+from math import gcd
+import random
+
+
 def shift_ints(ints, key):
     s = int(key)
     return [x + s for x in ints]
@@ -14,8 +18,6 @@ def decode_shift(msg):
         raw_bytes2 = bytearray()
         for val in msg:
             shifted_val = (val - i) % 256
-
-            quatre_octets = shifted_val.to_bytes(4, byteorder="little")
 
             raw_bytes2.append(shifted_val)
 
