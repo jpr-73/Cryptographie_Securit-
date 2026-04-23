@@ -13,16 +13,17 @@ def decode_shift(msg):
 
         raw_bytes2 = bytearray()
         for val in msg:
-            shifted_val = val - i
+            shifted_val = (val - i) % 256
 
             quatre_octets = shifted_val.to_bytes(4, byteorder="little")
 
-            raw_bytes2 += quatre_octets.replace(b'\x00', b'')
+            raw_bytes2.append(shifted_val)
 
         try :
             print("Key " + str(i) + " = " + raw_bytes2.decode("utf-8", errors="replace") + " \n")
 
         except :
+            print("Key " + str(i) + " = " + raw_bytes2.decode("latin-1") + " \n")
             print("problem with utf-8")
 
 
