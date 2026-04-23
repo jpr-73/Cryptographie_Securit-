@@ -15,18 +15,23 @@ def update_visibility(*args):
     try:
         r3.pack_forget()
         r4.pack_forget()
+        r5.pack_forget()
         r6.pack_forget()
         r7.pack_forget()
         r8.pack_forget()
         r9.pack_forget()
         r10.pack_forget()
+        r11.pack_forget()
+        r12.pack_forget()
 
         selected_mode = mode_var.get()
 
         if selected_mode == "Single Shift":
             r3.pack(fill="x", pady=10, after=r2)
             r9.pack(fill="x", pady=10, after=r3)
-            last_widget = r9
+            r5.pack(fill="x", pady=10, after=r9)
+            r11.pack(fill="x", pady=10, after=r5)
+            last_widget = r11
 
         elif selected_mode == "RSA":
             r8.pack(fill="x", pady=10, after=r2)
@@ -37,16 +42,23 @@ def update_visibility(*args):
         elif selected_mode == "Vigenere":
             r3.pack(fill="x", pady=10, after=r2)
             r9.pack(fill="x", pady=10, after=r3)
-            last_widget = r9
+            r5.pack(fill="x", pady=10, after=r9)
+            r11.pack(fill="x", pady=10, after=r5)
+            last_widget = r11
             
 
         selected_mode2 = sub_mode1.get()
         if selected_mode2 == "Encode":
             r4.pack(fill="x", pady=10, after=last_widget)
+            r5.pack(fill="x", pady=10, after=r4)
+            r12.pack(fill="x", pady=10, after=r12)
+        
 
         if selected_mode2 == "Decode":
             r7.pack(fill="x", pady=10, after=last_widget)
             r9.pack(fill="x", pady=10, after=r7)
+            r11.pack(fill="x", pady=10, after=r9)
+
     except Exception as e:
         return
 
@@ -137,7 +149,7 @@ def encodeButton():
                 output = f"/encode vigenere {temp}"
                 interpretCommand.interpret(output)
             case "RSA":
-                output = f"/encode RSA {modValue.get()} {keyValue.get()}"
+                output = f"/encode RSA {modValue.get()} {eValue.get()}"
                 interpretCommand.interpret(output)
             case "DiffieHellman":
                 output = f"/encode diffiehellman {temp}"
@@ -152,7 +164,6 @@ def encodeButton():
 
 def decodeButton():
     global mode_var
-    are_You_Stupid('k')
     try:
         match mode_var.get():
             case "Single Shift":
@@ -162,6 +173,7 @@ def decodeButton():
                 getKeyCommand = f"/decode vigenere {keyValue.get()}"
                 interpretCommand.interpret(getKeyCommand)
             case "RSA":
+                are_You_Stupid('k')
                 getKeyCommand = f"/decode rsa {keyValue.get()} {modValue.get()} {contentValue.get()}"
                 interpretCommand.interpret(getKeyCommand)
             case "DiffieHellman":
@@ -262,6 +274,13 @@ r6.pack(fill="x", pady=10)
 tk.Label(r6, text="Modular :", bg="#ececec", fg="black").pack(side="left")
 tk.Entry(r6, relief="solid", bg="white", fg="black", bd=1, textvariable=modValue).pack(side="left", fill="x", expand=True)
 
+# e field
+eValue = tk.StringVar()
+r12 = tk.Frame(right, bg="#ececec")
+r12.pack(fill="x", pady=10)
+tk.Label(r6, text="e :", bg="#ececec", fg="black").pack(side="left")
+tk.Entry(r6, relief="solid", bg="white", fg="black", bd=1, textvariable=eValue).pack(side="left", fill="x", expand=True)
+
 # Content field
 contentValue = tk.StringVar()
 r7 = tk.Frame(right, bg="#ececec")
@@ -279,11 +298,15 @@ r9 = tk.Frame(right, bg="#ececec")
 r9.pack(fill="x", pady=4)
 tk.Button(r9, text="Decode", bg="#ececec", relief="groove", width=15, command=decodeButton).pack(side="left", padx=4)
 
-# Task Encode / Task Decode
+# Task Encode
 r5 = tk.Frame(right, bg="#ececec")
 r5.pack(fill="x", pady=4)
 tk.Button(r5, text="Get Encode Task", bg="#ececec", relief="groove", width=15, command=encodeTaskButton).pack(side="left", padx=5)
-tk.Button(r5, text="Get Decode Task", bg="#ececec", relief="groove", width=15, command=decodeTaskButton).pack(side="left", padx=5)
+
+# Task Decode
+r11 = tk.Frame(right, bg="#ececec")
+r11.pack(fill="x", pady=4)
+tk.Button(r11, text="Get Decode Task", bg="#ececec", relief="groove", width=15, command=decodeTaskButton).pack(side="left", padx=5)
 
 # Generate
 r10 = tk.Frame(right, bg="#ececec")
