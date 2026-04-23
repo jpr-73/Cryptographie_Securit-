@@ -26,7 +26,6 @@ def update_visibility(*args):
         if selected_mode == "Single Shift":
             r3.pack(fill="x", pady=10, after=r2)
             r9.pack(fill="x", pady=10, after=r3)
-
             last_widget = r9
 
         elif selected_mode == "RSA":
@@ -36,7 +35,10 @@ def update_visibility(*args):
             last_widget = r10
 
         elif selected_mode == "Vigenere":
-            pass
+            r3.pack(fill="x", pady=10, after=r2)
+            r9.pack(fill="x", pady=10, after=r3)
+            last_widget = r9
+            
 
         selected_mode2 = sub_mode1.get()
         if selected_mode2 == "Encode":
@@ -80,15 +82,15 @@ def encodeTaskButton():
     try:
         match mode_var.get():
             case "Single Shift":
-                interpretCommand.interpret("/send -s task shift encode " + inputtext.get())
+                interpretCommand.interpret("/task shift encode " + inputtext.get())
             case "Vigenere":
-                interpretCommand.interpret("/send -s task vigenere encode " + inputtext.get())
+                interpretCommand.interpret("/task vigenere encode " + inputtext.get())
             case "RSA":
-                interpretCommand.interpret("/send -s task RSA encode " + inputtext.get())
+                interpretCommand.interpret("/task RSA encode " + inputtext.get())
             case "DiffieHellman":
-                interpretCommand.interpret("/send -s task diffiehellman encode " + inputtext.get())
+                interpretCommand.interpret("/task diffiehellman encode " + inputtext.get())
             case "Hashing":
-                interpretCommand.interpret("/send -s task hashing encode " + inputtext.get())
+                interpretCommand.interpret("/task hashing encode " + inputtext.get())
     except Exception as e:
         print(f"Error: {e}")
 
@@ -97,15 +99,15 @@ def decodeTaskButton():
     try:
         match mode_var.get():
             case "Single Shift":
-                interpretCommand.interpret("/send -s task shift decode " + inputtext.get())
+                interpretCommand.interpret("/task shift decode " + inputtext.get())
             case "Vigenere":
-                interpretCommand.interpret("/send -s task vigenere decode " + inputtext.get())
+                interpretCommand.interpret("/task vigenere decode " + inputtext.get())
             case "RSA":
                 interpretCommand.interpret("/task RSA decode " + inputtext.get())
             case "DiffieHellman":
-                interpretCommand.interpret("/send -s task diffiehellman decode " + inputtext.get())
+                interpretCommand.interpret("/task diffiehellman decode " + inputtext.get())
             case "Hashing":
-                interpretCommand.interpret("/send -s task hashing decode " + inputtext.get())
+                interpretCommand.interpret("/task hashing decode " + inputtext.get())
     except Exception as e:
         print(f"Error: {e}")
 
@@ -150,7 +152,7 @@ def decodeButton():
     try:
         match mode_var.get():
             case "Single Shift":
-                getKeyCommand = f"/decode shift {keyValue.get()}"
+                getKeyCommand = f"/decode shift"
                 interpretCommand.interpret(getKeyCommand)
             case "Vigenere":
                 getKeyCommand = f"/decode vigenere {keyValue.get()}"
