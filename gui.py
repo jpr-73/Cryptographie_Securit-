@@ -13,51 +13,50 @@ serverhassentatext = False
 # ── Status Checker ────────────────────────────────────────────────────────────────
 def update_visibility(*args):
     try:
-        r3.pack_forget()
-        r4.pack_forget()
-        r5.pack_forget()
-        r6.pack_forget()
-        r7.pack_forget()
-        r8.pack_forget()
-        r9.pack_forget()
-        r10.pack_forget()
-        r11.pack_forget()
-        r12.pack_forget()
+        keyField.pack_forget()
+        encodeFrame.pack_forget()
+        encodeTask.pack_forget()
+        modField.pack_forget()
+        contentField.pack_forget()
+        encETdec.pack_forget()
+        decodeFrame.pack_forget()
+        genBtn.pack_forget()
+        decodeTask.pack_forget()
+        eField.pack_forget()
 
         selected_mode = mode_var.get()
 
         if selected_mode == "Single Shift":
-            r3.pack(fill="x", pady=10, after=r2)
-            r9.pack(fill="x", pady=10, after=r3)
-            r5.pack(fill="x", pady=10, after=r9)
-            r11.pack(fill="x", pady=10, after=r5)
-            last_widget = r11
+            keyField.pack(fill="x", pady=10, after=modeTab)
+            decodeFrame.pack(fill="x", pady=10, after=keyField)
+            encodeTask.pack(fill="x", pady=10, after=decodeFrame)
+            decodeTask.pack(fill="x", pady=10, after=encodeTask)
+            last_widget = decodeTask
 
         elif selected_mode == "RSA":
-            r8.pack(fill="x", pady=10, after=r2)
-            r6.pack(fill="x", pady=10, after=r8)
-            r10.pack(fill="x", pady=10, after=r6)
-            last_widget = r10
+            encETdec.pack(fill="x", pady=10, after=modeTab)
+            modField.pack(fill="x", pady=10, after=encETdec)
+            last_widget = encETdec
 
         elif selected_mode == "Vigenere":
-            r3.pack(fill="x", pady=10, after=r2)
-            r9.pack(fill="x", pady=10, after=r3)
-            r5.pack(fill="x", pady=10, after=r9)
-            r11.pack(fill="x", pady=10, after=r5)
-            last_widget = r11
+            keyField.pack(fill="x", pady=10, after=modeTab)
+            decodeFrame.pack(fill="x", pady=10, after=keyField)
+            encodeTask.pack(fill="x", pady=10, after=decodeFrame)
+            decodeTask.pack(fill="x", pady=10, after=encodeTask)
+            last_widget = decodeTask
             
 
         selected_mode2 = sub_mode1.get()
         if selected_mode2 == "Encode":
-            r4.pack(fill="x", pady=10, after=last_widget)
-            r5.pack(fill="x", pady=10, after=r4)
-            r12.pack(fill="x", pady=10, after=r12)
-        
+            encodeTask.pack(fill="x", pady=10, after=last_widget)
+            eField.pack(fill="x", pady=10, after=encodeTask)
+            encodeFrame.pack(fill="x", pady=10, after=eField)
 
         if selected_mode2 == "Decode":
-            r7.pack(fill="x", pady=10, after=last_widget)
-            r9.pack(fill="x", pady=10, after=r7)
-            r11.pack(fill="x", pady=10, after=r9)
+            decodeTask.pack(fill="x", pady=10, after=last_widget)
+            contentField.pack(fill="x", pady=10, after=decodeTask)
+            decodeFrame.pack(fill="x", pady=10, after=contentField)
+            genBtn.pack(fill="x", pady=10, after=decodeFrame)
 
     except Exception as e:
         return
@@ -244,74 +243,74 @@ tk.Button(right, text="Send Clear", command=clearbutton, bg="#ececec", fg="black
           width=10).pack(anchor="e", pady=(2, 6))
 
 # Mode tabs
-r2 = tk.Frame(right, bg="#ececec")
-r2.pack(pady=4)
+modeTab = tk.Frame(right, bg="#ececec")
+modeTab.pack(pady=4)
 mode_var = tk.StringVar(value="Single Shift")
 for m in ("Single Shift", "Vigenere", "RSA", "DiffieHellman", "Hashing"):
-    tk.Radiobutton(r2, text=m, variable=mode_var, value=m,
+    tk.Radiobutton(modeTab, text=m, variable=mode_var, value=m,
                    indicatoron=False, width=11, bg="#ddd", fg="black",
                    selectcolor="white", relief="raised", command=update_visibility).pack(side="left", padx=2)
 
-r8 = tk.Frame(right, bg="#ececec")
-r8.pack(pady=4)
+encETdec = tk.Frame(right, bg="#ececec")
+encETdec.pack(pady=4)
 sub_mode1 = tk.StringVar(value="Encode")
 for m2 in ("Encode", "Decode"):
-    tk.Radiobutton(r8, text=m2, variable=sub_mode1, value=m2,
+    tk.Radiobutton(encETdec, text=m2, variable=sub_mode1, value=m2,
                    indicatoron=False, width=11, bg="#ddd", fg="black",
                    selectcolor="white", relief="raised", command=update_visibility).pack(side="left", padx=2)
 
 # Key field
 keyValue = tk.StringVar()
-r3 = tk.Frame(right, bg="#ececec")
-r3.pack(fill="x", pady=10)
-tk.Label(r3, text="Key :", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(r3, relief="solid", bg="white", fg="black", bd=1, textvariable=keyValue).pack(side="left", fill="x", expand=True)
+keyField = tk.Frame(right, bg="#ececec")
+keyField.pack(fill="x", pady=10)
+tk.Label(keyField, text="Key :", bg="#ececec", fg="black").pack(side="left")
+tk.Entry(keyField, relief="solid", bg="white", fg="black", bd=1, textvariable=keyValue).pack(side="left", fill="x", expand=True)
 
 # Modular field
 modValue = tk.StringVar()
-r6 = tk.Frame(right, bg="#ececec")
-r6.pack(fill="x", pady=10)
-tk.Label(r6, text="Modular :", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(r6, relief="solid", bg="white", fg="black", bd=1, textvariable=modValue).pack(side="left", fill="x", expand=True)
+modField = tk.Frame(right, bg="#ececec")
+modField.pack(fill="x", pady=10)
+tk.Label(modField, text="Modular :", bg="#ececec", fg="black").pack(side="left")
+tk.Entry(modField, relief="solid", bg="white", fg="black", bd=1, textvariable=modValue).pack(side="left", fill="x", expand=True)
 
 # e field
 eValue = tk.StringVar()
-r12 = tk.Frame(right, bg="#ececec")
-r12.pack(fill="x", pady=10)
-tk.Label(r6, text="e :", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(r6, relief="solid", bg="white", fg="black", bd=1, textvariable=eValue).pack(side="left", fill="x", expand=True)
+eField = tk.Frame(right, bg="#ececec")
+eField.pack(fill="x", pady=10)
+tk.Label(modField, text="e :", bg="#ececec", fg="black").pack(side="left")
+tk.Entry(modField, relief="solid", bg="white", fg="black", bd=1, textvariable=eValue).pack(side="left", fill="x", expand=True)
 
 # Content field
 contentValue = tk.StringVar()
-r7 = tk.Frame(right, bg="#ececec")
-r7.pack(fill="x", pady=10)
-tk.Label(r7, text="Content :", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(r7, relief="solid", bg="white", fg="black", bd=1, textvariable=contentValue).pack(side="left", fill="x", expand=True)
-
-# Encode
-r4 = tk.Frame(right, bg="#ececec")
-r4.pack(fill="x", pady=4)
-tk.Button(r4, text="Encode", bg="#ececec", relief="groove", width=15, command=encodeButton).pack(side="left", padx=4)
-
-# Decode
-r9 = tk.Frame(right, bg="#ececec")
-r9.pack(fill="x", pady=4)
-tk.Button(r9, text="Decode", bg="#ececec", relief="groove", width=15, command=decodeButton).pack(side="left", padx=4)
+contentField = tk.Frame(right, bg="#ececec")
+contentField.pack(fill="x", pady=10)
+tk.Label(contentField, text="Content :", bg="#ececec", fg="black").pack(side="left")
+tk.Entry(contentField, relief="solid", bg="white", fg="black", bd=1, textvariable=contentValue).pack(side="left", fill="x", expand=True)
 
 # Task Encode
-r5 = tk.Frame(right, bg="#ececec")
-r5.pack(fill="x", pady=4)
-tk.Button(r5, text="Get Encode Task", bg="#ececec", relief="groove", width=15, command=encodeTaskButton).pack(side="left", padx=5)
+encodeTask = tk.Frame(right, bg="#ececec")
+encodeTask.pack(fill="x", pady=4)
+tk.Button(encodeTask, text="Get Encode Task", bg="#ececec", relief="groove", width=15, command=encodeTaskButton).pack(side="left", padx=5)
 
 # Task Decode
-r11 = tk.Frame(right, bg="#ececec")
-r11.pack(fill="x", pady=4)
-tk.Button(r11, text="Get Decode Task", bg="#ececec", relief="groove", width=15, command=decodeTaskButton).pack(side="left", padx=5)
+decodeTask = tk.Frame(right, bg="#ececec")
+decodeTask.pack(fill="x", pady=4)
+tk.Button(decodeTask, text="Get Decode Task", bg="#ececec", relief="groove", width=15, command=decodeTaskButton).pack(side="left", padx=5)
+
+# Encode
+encodeFrame = tk.Frame(right, bg="#ececec")
+encodeFrame.pack(fill="x", pady=4)
+tk.Button(encodeFrame, text="Encode", bg="#ececec", relief="groove", width=15, command=encodeButton).pack(side="left", padx=4)
+
+# Decode
+decodeFrame = tk.Frame(right, bg="#ececec")
+decodeFrame.pack(fill="x", pady=4)
+tk.Button(decodeFrame, text="Decode", bg="#ececec", relief="groove", width=15, command=decodeButton).pack(side="left", padx=4)
 
 # Generate
-r10 = tk.Frame(right, bg="#ececec")
-r10.pack(fill="x", pady=4)
-tk.Button(r10, text="Generate", bg="#ececec", relief="groove", width=15, command=generateButton).pack(side="left", padx=5)
+genBtn = tk.Frame(right, bg="#ececec")
+genBtn.pack(fill="x", pady=4)
+tk.Button(genBtn, text="Generate", bg="#ececec", relief="groove", width=15, command=generateButton).pack(side="left", padx=5)
 
 # ── ChatBox / Console Redirection ────────────────────────────────────────────────────────────────
 
