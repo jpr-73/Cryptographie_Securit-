@@ -79,6 +79,7 @@ def sendtoserver():
 
 def encodeTaskButton():
     global mode_var
+    are_You_Stupid('i')
     try:
         match mode_var.get():
             case "Single Shift":
@@ -96,6 +97,7 @@ def encodeTaskButton():
 
 def decodeTaskButton():
     global mode_var
+    are_You_Stupid('i')
     try:
         match mode_var.get():
             case "Single Shift":
@@ -124,6 +126,7 @@ def generateButton():
 
 def encodeButton():
     global mode_var
+    are_You_Stupid('k')
     temp = keyValue.get()
     try:
         match mode_var.get():
@@ -149,6 +152,7 @@ def encodeButton():
 
 def decodeButton():
     global mode_var
+    are_You_Stupid('k')
     try:
         match mode_var.get():
             case "Single Shift":
@@ -168,6 +172,12 @@ def decodeButton():
                 interpretCommand.interpret(getKeyCommand)
     except Exception as e:
         print(f"Error: {e}")
+
+def are_You_Stupid(mode):
+    if (inputtext.get() == "" and mode == 'i'):
+        print("\nYou might want to decide a length, maybe ?\n")
+    if (keyValue.get() == "" and mode == 'k'):
+        print("\nYou might want to give me a key, maybe ?\n")
 
 # ── GUI ────────────────────────────────────────────────────────────────
 root = tk.Tk()
