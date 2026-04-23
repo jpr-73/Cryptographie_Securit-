@@ -29,10 +29,21 @@ def update_visibility(*args):
 
         if selected_mode == "Single Shift":
             keyField.pack(fill="x", pady=10, after=modeTab)
-            decodeFrame.pack(fill="x", pady=10, after=keyField)
-            encodeTask.pack(fill="x", pady=10, after=decodeFrame)
-            decodeTask.pack(fill="x", pady=10, after=encodeTask)
-            last_widget = decodeTask
+            encodeTask.pack(fill="x", pady=10, after=keyField)
+            encodeFrame.pack(fill="x", pady=10, after=encodeTask)
+            decodeTask.pack(fill="x", pady=10, after=encodeFrame)
+            decodeFrame.pack(fill="x", pady=10, after=decodeTask)
+            last_widget = decodeFrame
+
+        
+        elif selected_mode == "DiffieHellman":
+            keyField.pack(fill="x", pady=10, after=modeTab)
+            encodeTask.pack(fill="x", pady=10, after=keyField)
+            last_widget = encodeTask
+
+        elif selected_mode == "Hashing":
+            pass
+
 
         elif selected_mode == "RSA":
             encETdec.pack(fill="x", pady=5, after=modeTab)
@@ -58,13 +69,11 @@ def update_visibility(*args):
 
         elif selected_mode == "Vigenere":
             keyField.pack(fill="x", pady=10, after=modeTab)
-            decodeFrame.pack(fill="x", pady=10, after=keyField)
-            encodeTask.pack(fill="x", pady=10, after=decodeFrame)
-            decodeTask.pack(fill="x", pady=10, after=encodeTask)
-            last_widget = decodeTask
-            
-
-        
+            encodeTask.pack(fill="x", pady=10, after=keyField)
+            encodeFrame.pack(fill="x", pady=10, after=encodeTask)
+            decodeTask.pack(fill="x", pady=10, after=encodeFrame)
+            decodeFrame.pack(fill="x", pady=10, after=decodeTask)
+            last_widget = decodeFrame
 
     except Exception as e:
         return
@@ -98,19 +107,21 @@ def sendtoserver():
 
 def encodeTaskButton():
     global mode_var
-    are_You_Stupid('i')
     try:
         match mode_var.get():
             case "Single Shift":
+                are_You_Stupid('i')
                 interpretCommand.interpret("/task shift encode " + inputtext.get())
             case "Vigenere":
+                are_You_Stupid('i')
                 interpretCommand.interpret("/task vigenere encode " + inputtext.get())
             case "RSA":
+                are_You_Stupid('i')
                 interpretCommand.interpret("/task RSA encode " + inputtext.get())
             case "DiffieHellman":
-                interpretCommand.interpret("/task diffiehellman encode " + inputtext.get())
+                interpretCommand.interpret("/task DifHel")
             case "Hashing":
-                interpretCommand.interpret("/task hashing encode " + inputtext.get())
+                interpretCommand.interpret("/task hash hash")
     except Exception as e:
         print(f"Error: {e}")
 

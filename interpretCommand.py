@@ -230,7 +230,7 @@ def interpret(line) :
                             
                             case "vigenere" :
 
-                                print("On va pas faire : pas le temps")
+                                print("On va pas faire, on a pas le temps :(")
                                 return True
                             
                             case "rsa" | "RSA" :
