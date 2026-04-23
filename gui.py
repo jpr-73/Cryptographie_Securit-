@@ -122,6 +122,7 @@ def encodeTaskButton():
                 interpretCommand.interpret("/task DifHel")
             case "Hashing":
                 interpretCommand.interpret("/task hash hash")
+        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
@@ -140,6 +141,7 @@ def decodeTaskButton():
                 interpretCommand.interpret("/task diffiehellman decode " + inputtext.get())
             case "Hashing":
                 interpretCommand.interpret("/task hashing decode " + inputtext.get())
+        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
@@ -151,6 +153,7 @@ def generateButton():
                 interpretCommand.interpret("/generate rsa")
             case "DiffieHellman":
                 interpretCommand.interpret("/generate dh")
+        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
@@ -176,11 +179,7 @@ def encodeButton():
             case "Hashing":
                 output = f"/encode hashing {temp}"
                 interpretCommand.interpret(output)
-        keyValue.set("")
-        modValue.set("")
-        eValue.set("")
-        dValue.set("")
-        contentValue.set("")
+        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
@@ -204,8 +203,16 @@ def decodeButton():
             case "Hashing":
                 getKeyCommand = f"/decode hashing {keyValue.get()}"
                 interpretCommand.interpret(getKeyCommand)
+        empty_values()
     except Exception as e:
         print(f"Error: {e}")
+
+def empty_values() :
+    keyValue.set("")
+    modValue.set("")
+    eValue.set("")
+    dValue.set("")
+    contentValue.set("")
 
 def are_You_Stupid(mode):
     if (inputtext.get() == "" and mode == 'i'):
