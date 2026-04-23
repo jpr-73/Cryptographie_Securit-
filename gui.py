@@ -169,6 +169,7 @@ def encodeButton():
         modValue.set("")
         eValue.set("")
         dValue.set("")
+        contentValue.set("")
     except Exception as e:
         print(f"Error: {e}")
 
@@ -290,7 +291,7 @@ tk.Entry(modField, relief="solid", bg="white", fg="black", bd=1, textvariable=mo
 dValue = tk.StringVar()
 dField = tk.Frame(right, bg="#ececec")
 dField.pack(fill="x", pady=10)
-tk.Label(dField, text="p :", bg="#ececec", fg="black").pack(side="left")
+tk.Label(dField, text="d :", bg="#ececec", fg="black").pack(side="left")
 tk.Entry(dField, relief="solid", bg="white", fg="black", bd=1, textvariable=dValue).pack(side="left", fill="x", expand=True)
 
 
