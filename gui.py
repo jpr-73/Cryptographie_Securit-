@@ -331,7 +331,8 @@ root.title("Secret Communication Channel")
 icon_img = tk.PhotoImage(file="icon.png")
 root.wm_iconphoto(True, icon_img)
 root.geometry("1000x600")
-root.attributes('-topmost', True)
+root.lift()
+root.focus_force()
 root.configure(fg_color="#ececec")
 
 # ── Top bar ────────────────────────────────────────────────────────────────
