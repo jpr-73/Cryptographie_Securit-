@@ -19,6 +19,7 @@ def update_visibility(*args):
         modField.pack_forget()
         contentField.pack_forget()
         encETdec.pack_forget()
+        hashETverify.pack_forget()
         decodeFrame.pack_forget()
         genBtn.pack_forget()
         decodeTask.pack_forget()
@@ -35,6 +36,8 @@ def update_visibility(*args):
         difSendSecret.pack_forget()
         taskhash.pack_forget()
         taskhashverify.pack_forget()
+        verifyhashbutton.pack_forget()
+        sendhashbutton.pack_forget()
 
 
         selected_mode = mode_var.get()
@@ -60,9 +63,19 @@ def update_visibility(*args):
             last_widget = difSendSecret
 
         elif selected_mode == "Hashing":
-            taskhash.pack(fill="x", pady=10, after=modeTab)
-            taskhashverify.pack(fill="x", pady=10, after=taskhash)
-            last_widget = taskhashverify
+            hashETverify.pack(fill="x", pady=10, after=modeTab)
+            last_widget = hashETverify
+            selected_mode3 = sub_mode2.get()
+
+            if selected_mode3 == "Hash":
+                taskhash.pack(fill="x", pady=10, after=last_widget)
+                sendhashbutton.pack(fill="x", pady=10, after=taskhash)
+                last_widget = sendhashbutton
+
+            if selected_mode3 == "Verify":
+                taskhashverify.pack(fill="x", pady=10, after=last_widget)
+                verifyhashbutton.pack(fill="x", pady=10, after=taskhashverify)
+                last_widget = verifyhashbutton
 
         elif selected_mode == "RSA":
             encETdec.pack(fill="x", pady=5, after=modeTab)
@@ -95,6 +108,7 @@ def update_visibility(*args):
             last_widget = decodeFrame
 
     except Exception as e:
+        print(e)
         return
 
 def clearbutton():
@@ -204,6 +218,20 @@ def taskhashButton():
 def taskhashverifyButton():
     try :
         interpretCommand.interpret(f"/task hash verify")
+        empty_values()
+    except Exception as e:
+        print(f"Error: {e}")
+
+def sendhashButton():
+    try :
+        interpretCommand.interpret(f"/encode hash")
+        empty_values()
+    except Exception as e:
+        print(f"Error: {e}")
+
+def verifyhashButton():
+    try :
+        interpretCommand.interpret(f"/decode hash")
         empty_values()
     except Exception as e:
         print(f"Error: {e}")
@@ -346,11 +374,20 @@ for m in ("Single Shift", "Vigenere", "RSA", "DiffieHellman", "Hashing"):
                    indicatoron=False, width=11, bg="#ddd", fg="black",
                    selectcolor="white", relief="raised", command=update_visibility).pack(side="left", padx=2)
 
+sub_mode1 = tk.StringVar(value="Encode")
+sub_mode2 = tk.StringVar(value="Hash")
+
 encETdec = tk.Frame(right, bg="#ececec")
 encETdec.pack(pady=4)
-sub_mode1 = tk.StringVar(value="Encode")
 for m2 in ("Encode", "Decode"):
     tk.Radiobutton(encETdec, text=m2, variable=sub_mode1, value=m2,
+                   indicatoron=False, width=11, bg="#ddd", fg="black",
+                   selectcolor="white", relief="raised", command=update_visibility).pack(side="left", padx=2)
+
+hashETverify = tk.Frame(right, bg="#ececec")
+hashETverify.pack(pady=4)
+for m2 in ("Hash", "Verify"):
+    tk.Radiobutton(hashETverify, text=m2, variable=sub_mode2, value=m2,
                    indicatoron=False, width=11, bg="#ddd", fg="black",
                    selectcolor="white", relief="raised", command=update_visibility).pack(side="left", padx=2)
 
@@ -451,12 +488,22 @@ tk.Button(difSendSecret, text="Send Secret", bg="#ececec", relief="groove", widt
 # Hashing task button
 taskhash = tk.Frame(right, bg="#ececec")
 taskhash.pack(fill="x", pady=4)
-tk.Button(taskhash, text="Task Hash", bg="#ececec", relief="groove", width=15, command=taskhashButton).pack(side="left", padx=5)
+tk.Button(taskhash, text="Get Task", bg="#ececec", relief="groove", width=15, command=taskhashButton).pack(side="left", padx=5)
 
 # Hashing task verify button
 taskhashverify = tk.Frame(right, bg="#ececec")
 taskhashverify.pack(fill="x", pady=4)
-tk.Button(taskhashverify, text="Verify Hash", bg="#ececec", relief="groove", width=15, command=taskhashverifyButton).pack(side="left", padx=5)
+tk.Button(taskhashverify, text="Get Task", bg="#ececec", relief="groove", width=15, command=taskhashverifyButton).pack(side="left", padx=5)
+
+# Hashing send hash button
+sendhashbutton = tk.Frame(right, bg="#ececec")
+sendhashbutton.pack(fill="x", pady=4)
+tk.Button(sendhashbutton, text="Send Hash", bg="#ececec", relief="groove", width=15, command=sendhashButton).pack(side="left", padx=5)
+
+# Hashing verify hash button
+verifyhashbutton = tk.Frame(right, bg="#ececec")
+verifyhashbutton.pack(fill="x", pady=4)
+tk.Button(verifyhashbutton, text="Verify Hash", bg="#ececec", relief="groove", width=15, command=verifyhashButton).pack(side="left", padx=5)
 
 # Encode
 encodeFrame = tk.Frame(right, bg="#ececec")
