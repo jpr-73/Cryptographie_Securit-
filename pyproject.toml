@@ -1,9 +1,9 @@
 [project]
-name = "103-2-pbasics"
+name = "SuperChat"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "ipykernel>=6.31.0",
     "customtkinter>=5.2.2",
