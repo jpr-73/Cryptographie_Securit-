@@ -1,6 +1,6 @@
 # ISC Chat Client
 
-A Python client for the ISC protocol server — CLI first, GUI planned.  
+A Python client for the ISC protocol server — complete with CLI and GUI interfaces.  
 Built as part of a cryptography & networking course at HES-SO.
 
 ## Features
@@ -8,7 +8,7 @@ Built as part of a cryptography & networking course at HES-SO.
 - TCP socket communication with the ISC protocol server
 - Text, server-command, and image message support
 - Cryptographic tasks
-- CLI interface (GUI in progress)
+- CLI and GUI interfaces
 
 ## Protocol Overview
 
@@ -31,21 +31,47 @@ All messages use the `ISC` binary protocol:
 - **Port:** `6000`
 - **Access:** HEI network or VPN required
 
-## Server Commands (type `s`)
+## CLI Commands
 
-Send commands via server messages (`s` type):
+The CLI supports the following commands:
 
+**General:**
 ```
-task shift encode 50       # Shift cipher encoding task (50 chars)
-task vigenere decode 100   # Vigenère decoding task
-task RSA encode 200        # RSA encoding task
-task DifHel                # Start Diffie-Hellman key exchange
-task hash verify           # Hash verification task
-task hash hash             # Hashing task
+- /help - Show available commands
+- /send <text> - Send text
+- /send -s <text> - Send a server message
+- /exit - Close the client
 ```
 
-After sending a `task` command, the server replies with instructions.  
-Send your answer as a plain server message (no command prefix).
+**Buffer Management:**
+```
+- /set <text> - Set the local buffer
+- /show - Show current buffer content
+- /clear - Clear the buffer
+```
+
+**Cryptographic Operations:**
+```
+- /encode shift <key>
+- /encode vigenere <key>
+- /encode rsa <n> <e>
+- /encode hash
+- /decode shift
+- /decode rsa <n> <d> <content>
+- /generate rsa
+- /generate dh
+- /generate dh-hk <p> <g>
+- /generate dh-secret <p> <privKey> <pubKey>
+```
+**Server Tasks:**
+```
+- /task shift|vigenere|RSA encode|decode <length>
+- /task DifHel
+- /task hash hash|verify
+```
+
+After sending a task request, the server replies with instructions.  
+Send your answer using `/send -s <answer>`.
 
 
 ## Status
@@ -53,4 +79,4 @@ Send your answer as a plain server message (no command prefix).
 - [x] TCP connection & ISC framing
 - [x] Text & server message support
 - [x] Cryptographic modules
-- [ ] GUI
+- [x] GUI
