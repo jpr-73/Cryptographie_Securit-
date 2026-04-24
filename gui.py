@@ -7,6 +7,7 @@ import interpretCommand
 ctk.set_appearance_mode("light") # ou "dark"
 ctk.set_default_color_theme("blue")
 
+
 # ── Variables ────────────────────────────────────────────────────────────────
 sendingToServer = False
 connected = False
@@ -48,12 +49,23 @@ def update_visibility(*args):
         selected_mode = mode_var.get()
 
         if selected_mode == "Single Shift":
-            keyField.pack(fill="x", pady=10, after=modeTab)
-            encodeTask.pack(fill="x", pady=10, after=keyField)
-            encodeFrame.pack(fill="x", pady=10, after=encodeTask)
-            decodeTask.pack(fill="x", pady=10, after=encodeFrame)
-            decodeFrame.pack(fill="x", pady=10, after=decodeTask)
-            last_widget = decodeFrame
+            encETdec.pack(fill="x", pady=5, after=modeTab)
+            keyField.pack(fill="x", pady=10, after=encETdec)
+
+            last_widget = keyField
+
+            selected_mode4 = sub_mode1.get()
+
+            if selected_mode4 == "Encode" :
+                encodeTask.pack(fill="x", pady=10, after=last_widget)
+                encodeFrame.pack(fill="x", pady=10, after=encodeTask)
+                last_widget = encodeFrame
+
+            if selected_mode4 == "Decode":
+                decodeTask.pack(fill="x", pady=10, after=last_widget)
+                decodeFrame.pack(fill="x", pady=10, after=decodeTask)
+                last_widget = decodeFrame
+            
 
         
         elif selected_mode == "DiffieHellman":
@@ -115,6 +127,8 @@ def update_visibility(*args):
             last_widget = decodeFrame
     
         clearValuesBtn.pack(side="bottom", anchor="e", pady=10)
+
+        root.update_idletasks()
 
     except Exception as e:
         print(e)
