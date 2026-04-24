@@ -1,7 +1,11 @@
 import tkinter as tk
-from tkinter import scrolledtext
+import customtkinter as ctk
+from tkinter import scrolledtext # On garde ça juste au cas où, mais on va utiliser CTkTextbox
 import sys
 import interpretCommand
+
+ctk.set_appearance_mode("light") # ou "dark"
+ctk.set_default_color_theme("blue")
 
 # ── Variables ────────────────────────────────────────────────────────────────
 sendingToServer = False
@@ -38,7 +42,7 @@ def update_visibility(*args):
         taskhashverify.pack_forget()
         verifyhashbutton.pack_forget()
         sendhashbutton.pack_forget()
-        clearValuesBtn.pack_forget
+        clearValuesBtn.pack_forget()
 
 
         selected_mode = mode_var.get()
@@ -308,218 +312,216 @@ def are_You_Stupid(mode):
         print("\nYou might want to give me a key, maybe ?\n")
 
 # ── GUI ────────────────────────────────────────────────────────────────
-root = tk.Tk()
+root = ctk.CTk()
 root.title("Secret Communication Channel")
 icon_img = tk.PhotoImage(file="icon.png")
-root.iconphoto(True, icon_img)
+root.wm_iconphoto(True, icon_img)
 root.geometry("1000x600")
 root.attributes('-topmost', True)
-root.configure(bg="#ececec")
-root.option_add("*Button.highlightBackground", "#ececec")
-root.option_add("*Label.highlightBackground", "#ececec")
-root.option_add("*RadioButton.highlightBackground", "#ececec")
-root.option_add("*Entry.highlightBackground", "#ececec")
-root.option_add("*Entry.insertBackground", "Black")
+root.configure(fg_color="#ececec")
 
 # ── Top bar ────────────────────────────────────────────────────────────────
 topbarcolor = tk.StringVar(value="red")
-statusbar = tk.Frame(root, bg=topbarcolor.get(), height=4)
+statusbar = ctk.CTkFrame(root, fg_color=topbarcolor.get(), height=4)
 statusbar.pack(fill="x")
 
 # ── Layout ─────────────────────────────────────────────────────────────────
-left = tk.Frame(root, bg="#ececec", width=350)
+left = ctk.CTkFrame(root, fg_color="#ececec", width=350)
 left.pack(side="left", fill="y", padx=8, pady=8)
 left.pack_propagate(False)
 
-tk.Frame(root, bg="#cccccc", width=1).pack(side="left", fill="y")
+ctk.CTkFrame(root, fg_color="#cccccc", width=1).pack(side="left", fill="y")
 
-right = tk.Frame(root, bg="#ececec")
+right = ctk.CTkFrame(root, fg_color="#ececec")
 right.pack(side="left", fill="both", expand=True, padx=10, pady=8)
 
 # ── Left: chat history ──────────────────────────────────────────────────────
-chat = scrolledtext.ScrolledText(left, bg="white", relief="flat", state="disabled", fg="black")
+chat = ctk.CTkTextbox(left, fg_color="white", text_color="black")
 chat.pack(fill="both", expand=True)
 
 # ── Right: controls ─────────────────────────────────────────────────────────
 
 # Checkbox + Text/Image tabs
-r1 = tk.Frame(right, bg="#ececec")
+r1 = ctk.CTkFrame(right, fg_color="#ececec")
 r1.pack(fill="x", pady=(0, 6))
-tk.Checkbutton(r1, text="Send to Server only", bg="#ececec", fg="black", command=sendtoserver).pack(side="left")
+ctk.CTkCheckBox(r1, text="Send to Server only", text_color="black", command=sendtoserver).pack(side="left")
 tab_var = tk.StringVar(value="Text")
 for t in ("Image", "Text"):
-    tk.Radiobutton(r1, text=t, variable=tab_var, value=t,
-                   indicatoron=False, width=7, bg="#ddd",
-                   selectcolor="white", relief="raised", fg="black").pack(side="right", padx=1)
+    ctk.CTkRadioButton(r1, text=t, variable=tab_var, value=t, text_color="black").pack(side="right", padx=1)
 
 # Input box
 inputtext = tk.StringVar()
-input_box = tk.Entry(right, bg="white", fg="black", relief="solid", borderwidth=0, bd=1, textvariable=inputtext)
+input_box = ctk.CTkEntry(right, fg_color="white", text_color="black", textvariable=inputtext)
 input_box.pack(fill="x", pady=(0, 6))
 
 # Send Clear
-tk.Button(right, text="Send Clear", command=clearbutton, bg="#ececec", fg="black", relief="groove",
+ctk.CTkButton(right, text="Send Clear",  command=clearbutton, fg_color="#ececec", text_color="black", border_width=1,
           width=10).pack(anchor="e", pady=(2, 6))
 
 # Mode tabs
-modeTab = tk.Frame(right, bg="#ececec")
+modeTab = ctk.CTkFrame(right, fg_color="#ececec")
 modeTab.pack(pady=4)
 mode_var = tk.StringVar(value="Single Shift")
-for m in ("Single Shift", "Vigenere", "RSA", "DiffieHellman", "Hashing"):
-    tk.Radiobutton(modeTab, text=m, variable=mode_var, value=m,
-                   indicatoron=False, width=11, bg="#ddd", fg="black",
-                   selectcolor="white", relief="raised", command=update_visibility).pack(side="left", padx=2)
+mode_segmented = ctk.CTkSegmentedButton(
+    modeTab,
+    values=["Single Shift", "Vigenere", "RSA", "DiffieHellman", "Hashing"],
+    command=update_visibility,
+    variable=mode_var,
+    fg_color="#ececec",
+    border_width=1,
+    unselected_color="#444444",
+    selected_color="#3B8ED0",
+    selected_hover_color="#3B8ED0",
+    text_color="white"
+)
+mode_segmented.pack(pady=10)
 
 sub_mode1 = tk.StringVar(value="Encode")
 sub_mode2 = tk.StringVar(value="Hash")
 
-encETdec = tk.Frame(right, bg="#ececec")
+encETdec = ctk.CTkFrame(right, fg_color="#ececec")
 encETdec.pack(pady=4)
 for m2 in ("Encode", "Decode"):
-    tk.Radiobutton(encETdec, text=m2, variable=sub_mode1, value=m2,
-                   indicatoron=False, width=11, bg="#ddd", fg="black",
-                   selectcolor="white", relief="raised", command=update_visibility).pack(side="left", padx=2)
+    ctk.CTkRadioButton(encETdec, text=m2, variable=sub_mode1,value=m2, text_color="black", command=update_visibility).pack(side="left", padx=2)
 
-hashETverify = tk.Frame(right, bg="#ececec")
+hashETverify = ctk.CTkFrame(right, fg_color="#ececec")
 hashETverify.pack(pady=4)
 for m2 in ("Hash", "Verify"):
-    tk.Radiobutton(hashETverify, text=m2, variable=sub_mode2, value=m2,
-                   indicatoron=False, width=11, bg="#ddd", fg="black",
-                   selectcolor="white", relief="raised", command=update_visibility).pack(side="left", padx=2)
+    ctk.CTkRadioButton(hashETverify, text=m2, variable=sub_mode2,value=m2, text_color="black", command=update_visibility).pack(side="left", padx=2)
 
 # Key field
 keyValue = tk.StringVar()
-keyField = tk.Frame(right, bg="#ececec")
+keyField = ctk.CTkFrame(right, fg_color="#ececec")
 keyField.pack(fill="x", pady=10)
-tk.Label(keyField, text="Key :", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(keyField, relief="solid", bg="white", fg="black", bd=1, textvariable=keyValue).pack(side="left", fill="x", expand=True)
+ctk.CTkLabel(keyField, text="Key :", text_color="black").pack(side="left")
+ctk.CTkEntry(keyField, fg_color="white", text_color="black", textvariable=keyValue).pack(side="left", fill="x", expand=True)
 
 # Modular field
 modValue = tk.StringVar()
-modField = tk.Frame(right, bg="#ececec")
+modField = ctk.CTkFrame(right, fg_color="#ececec")
 modField.pack(fill="x", pady=10)
-tk.Label(modField, text="Modular :", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(modField, relief="solid", bg="white", fg="black", bd=1, textvariable=modValue).pack(side="left", fill="x", expand=True)
+ctk.CTkLabel(modField, text="Modular :", text_color="black").pack(side="left")
+ctk.CTkEntry(modField, fg_color="white", text_color="black", textvariable=modValue).pack(side="left", fill="x", expand=True)
 
 # public key field d
 dValue = tk.StringVar()
-dField = tk.Frame(right, bg="#ececec")
+dField = ctk.CTkFrame(right, fg_color="#ececec")
 dField.pack(fill="x", pady=10)
-tk.Label(dField, text="d :", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(dField, relief="solid", bg="white", fg="black", bd=1, textvariable=dValue).pack(side="left", fill="x", expand=True)
+ctk.CTkLabel( dField, text="d :", text_color="black").pack(side="left")
+ctk.CTkEntry( dField, fg_color="white", text_color="black", textvariable=dValue).pack(side="left", fill="x", expand=True)
 
 
 # e field
 eValue = tk.StringVar()
-eField = tk.Frame(right, bg="#ececec")
+eField = ctk.CTkFrame(right, fg_color="#ececec")
 eField.pack(fill="x", pady=10)
-tk.Label(eField, text="e :", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(eField, relief="solid", bg="white", fg="black", bd=1, textvariable=eValue).pack(side="left", fill="x", expand=True)
+ctk.CTkLabel(eField, text="e :", text_color="black").pack(side="left")
+ctk.CTkEntry(eField, fg_color="white", text_color="black",textvariable=eValue).pack(side="left", fill="x", expand=True)
 
 # Content field
 contentValue = tk.StringVar()
-contentField = tk.Frame(right, bg="#ececec")
+contentField = ctk.CTkFrame(right, fg_color="#ececec")
 contentField.pack(fill="x", pady=10)
-tk.Label(contentField, text="Content :", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(contentField, relief="solid", bg="white", fg="black", bd=1, textvariable=contentValue).pack(side="left", fill="x", expand=True)
+ctk.CTkLabel(contentField, text="Content :", text_color="black").pack(side="left")
+ctk.CTkEntry(contentField, fg_color="white", text_color="black", textvariable=contentValue).pack(side="left", fill="x", expand=True)
 
 # Task Encode
-encodeTask = tk.Frame(right, bg="#ececec")
+encodeTask = ctk.CTkFrame(right, fg_color="#ececec")
 encodeTask.pack(fill="x", pady=4)
-tk.Button(encodeTask, text="Get Encode Task", bg="#ececec", relief="groove", width=15, command=encodeTaskButton).pack(side="left", padx=5)
+ctk.CTkButton(encodeTask, text="Get Encode Task", fg_color="#ececec", text_color="black", border_width=1, width=15, command=encodeTaskButton).pack(side="left", padx=5)
 
 # Task Decode
-decodeTask = tk.Frame(right, bg="#ececec")
+decodeTask = ctk.CTkFrame(right, fg_color="#ececec")
 decodeTask.pack(fill="x", pady=4)
-tk.Button(decodeTask, text="Get Decode Task", bg="#ececec", relief="groove", width=15, command=decodeTaskButton).pack(side="left", padx=5)
+ctk.CTkButton(decodeTask, text="Get Decode Task", fg_color="#ececec", text_color="black", border_width=1, width=15, command=decodeTaskButton).pack(side="left", padx=5)
 
 # Get DifHel Task
-getDifHelTask = tk.Frame(right, bg="#ececec")
+getDifHelTask = ctk.CTkFrame(right, fg_color="#ececec")
 getDifHelTask.pack(fill="x", pady=4)
-tk.Button(getDifHelTask, text="Get Diffie Hell Task", bg="#ececec", relief="groove", width=15, command=getDifHelTaskButton).pack(side="left", padx=5)
+ctk.CTkButton(getDifHelTask, text="Get Diffie Hell Task", fg_color="#ececec", text_color="black", border_width=1, width=15, command=getDifHelTaskButton).pack(side="left", padx=5)
 
 # DifHel generate space
-difHelGenSpace = tk.Frame(right, bg="#ececec")
+difHelGenSpace = ctk.CTkFrame(right, fg_color="#ececec")
 difHelGenSpace.pack(fill="x", pady=4)
-tk.Button(difHelGenSpace, text="Generate Space", bg="#ececec", relief="groove", width=15, command=difHelGenSpaceButton).pack(side="left", padx=5)
+ctk.CTkButton(difHelGenSpace, text="Generate Space", fg_color="#ececec", text_color="black", border_width=1, width=15, command=difHelGenSpaceButton).pack(side="left", padx=5)
 
 # modular p field
 pValue = tk.StringVar()
-pField = tk.Frame(right, bg="#ececec")
+pField = ctk.CTkFrame(right, fg_color="#ececec")
 pField.pack(fill="x", pady=10)
-tk.Label(pField, text="Modular p:", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(pField, relief="solid", bg="white", fg="black", bd=1, textvariable=pValue).pack(side="left", fill="x", expand=True)
+ctk.CTkLabel(pField, text="Modular p:", text_color="black").pack(side="left")
+ctk.CTkEntry(pField, fg_color="white", text_color="black",textvariable=pValue).pack(side="left", fill="x", expand=True)
 
 # modular point g field
 gValue = tk.StringVar()
-gField = tk.Frame(right, bg="#ececec")
+gField = ctk.CTkFrame(right, fg_color="#ececec")
 gField.pack(fill="x", pady=10)
-tk.Label(gField, text="DH generator world g:", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(gField, relief="solid", bg="white", fg="black", bd=1, textvariable=gValue).pack(side="left", fill="x", expand=True)
+ctk.CTkLabel(gField, text="DH generator world g:", text_color="black").pack(side="left")
+ctk.CTkEntry(gField, fg_color="white", text_color="black",  textvariable=gValue).pack(side="left", fill="x", expand=True)
 
 # DifHel half key
-difHelHalfKey = tk.Frame(right, bg="#ececec")
+difHelHalfKey = ctk.CTkFrame(right, fg_color="#ececec")
 difHelHalfKey.pack(fill="x", pady=4)
-tk.Button(difHelHalfKey, text="Send Half Key", bg="#ececec", relief="groove", width=15, command=difHelHalfKeyButton).pack(side="left", padx=5)
+ctk.CTkButton(difHelHalfKey, text="Send Half Key", fg_color="#ececec", text_color="black", border_width=1, width=15, command=difHelHalfKeyButton).pack(side="left", padx=5)
 
 # Dif Hel private Key field
 privKeyValue = tk.StringVar()
-privKeyField = tk.Frame(right, bg="#ececec")
+privKeyField = ctk.CTkFrame(right, fg_color="#ececec")
 privKeyField.pack(fill="x", pady=10)
-tk.Label(privKeyField, text="DH private key p1:", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(privKeyField, relief="solid", bg="white", fg="black", bd=1, textvariable=privKeyValue).pack(side="left", fill="x", expand=True)
+ctk.CTkLabel(privKeyField, text="DH private key p1:", text_color="black").pack(side="left")
+ctk.CTkEntry(privKeyField, fg_color="white", text_color="black", textvariable=privKeyValue).pack(side="left", fill="x", expand=True)
 
 # Dif Hel Server Public Key field
 publKeyValue = tk.StringVar()
-publKeyField = tk.Frame(right, bg="#ececec")
+publKeyField = ctk.CTkFrame(right, fg_color="#ececec")
 publKeyField.pack(fill="x", pady=10)
-tk.Label(publKeyField, text="[SERVER] public key :", bg="#ececec", fg="black").pack(side="left")
-tk.Entry(publKeyField, relief="solid", bg="white", fg="black", bd=1, textvariable=publKeyValue).pack(side="left", fill="x", expand=True)
+ctk.CTkLabel(publKeyField, text="[SERVER] public key :", text_color="black").pack(side="left")
+ctk.CTkEntry(publKeyField, fg_color="white", text_color="black",textvariable=publKeyValue).pack(side="left", fill="x", expand=True)
 
 # DifHel send secret
-difSendSecret = tk.Frame(right, bg="#ececec")
+difSendSecret = ctk.CTkFrame(right, fg_color="#ececec")
 difSendSecret.pack(fill="x", pady=4)
-tk.Button(difSendSecret, text="Send Secret", bg="#ececec", relief="groove", width=15, command=difHelSecretButton).pack(side="left", padx=5)
+ctk.CTkButton(difSendSecret, text="Send Secret", fg_color="#ececec", text_color="black", border_width=1, width=15, command=difHelSecretButton).pack(side="left", padx=5)
 
 # Hashing task button
-taskhash = tk.Frame(right, bg="#ececec")
+taskhash = ctk.CTkFrame(right, fg_color="#ececec")
 taskhash.pack(fill="x", pady=4)
-tk.Button(taskhash, text="Get Task", bg="#ececec", relief="groove", width=15, command=taskhashButton).pack(side="left", padx=5)
+ctk.CTkButton(taskhash, text="Get Task", fg_color="#ececec", text_color="black", border_width=1, width=15, command=taskhashButton).pack(side="left", padx=5)
 
 # Hashing task verify button
-taskhashverify = tk.Frame(right, bg="#ececec")
+taskhashverify = ctk.CTkFrame(right, fg_color="#ececec")
 taskhashverify.pack(fill="x", pady=4)
-tk.Button(taskhashverify, text="Get Task", bg="#ececec", relief="groove", width=15, command=taskhashverifyButton).pack(side="left", padx=5)
+ctk.CTkButton(taskhashverify, text="Get Task",  fg_color="#ececec", text_color="black", border_width=1, width=15, command=taskhashverifyButton).pack(side="left", padx=5)
 
 # Hashing send hash button
-sendhashbutton = tk.Frame(right, bg="#ececec")
+sendhashbutton = ctk.CTkFrame(right, fg_color="#ececec")
 sendhashbutton.pack(fill="x", pady=4)
-tk.Button(sendhashbutton, text="Send Hash", bg="#ececec", relief="groove", width=15, command=sendhashButton).pack(side="left", padx=5)
+ctk.CTkButton(sendhashbutton, text="Send Hash", fg_color="#ececec", text_color="black", border_width=1, width=15, command=sendhashButton).pack(side="left", padx=5)
 
 # Hashing verify hash button
-verifyhashbutton = tk.Frame(right, bg="#ececec")
+verifyhashbutton = ctk.CTkFrame(right, fg_color="#ececec")
 verifyhashbutton.pack(fill="x", pady=4)
-tk.Button(verifyhashbutton, text="Verify Hash", bg="#ececec", relief="groove", width=15, command=verifyhashButton).pack(side="left", padx=5)
+ctk.CTkButton(verifyhashbutton, text="Verify Hash", fg_color="#ececec", text_color="black", border_width=1, width=15, command=verifyhashButton).pack(side="left", padx=5)
 
 # Encode
-encodeFrame = tk.Frame(right, bg="#ececec")
+encodeFrame = ctk.CTkFrame(right, fg_color="#ececec")
 encodeFrame.pack(fill="x", pady=4)
-tk.Button(encodeFrame, text="Encode", bg="#ececec", relief="groove", width=15, command=encodeButton).pack(side="left", padx=4)
+ctk.CTkButton(encodeFrame, text="Encode", fg_color="#ececec", text_color="black", border_width=1, width=15, command=encodeButton).pack(side="left", padx=4)
 
 # Decode
-decodeFrame = tk.Frame(right, bg="#ececec")
+decodeFrame = ctk.CTkFrame(right, fg_color="#ececec")
 decodeFrame.pack(fill="x", pady=4)
-tk.Button(decodeFrame, text="Decode", bg="#ececec", relief="groove", width=15, command=decodeButton).pack(side="left", padx=4)
+ctk.CTkButton(decodeFrame, text="Decode",fg_color="#ececec", text_color="black", border_width=1, width=15, command=decodeButton).pack(side="left", padx=4)
 
 # Generate
-genBtn = tk.Frame(right, bg="#ececec")
+genBtn = ctk.CTkFrame(right, fg_color="#ececec")
 genBtn.pack(fill="x", pady=4)
-tk.Button(genBtn, text="Generate", bg="#ececec", relief="groove", width=15, command=generateButton).pack(side="left", padx=5)
+ctk.CTkButton(genBtn, text="Generate", fg_color="#ececec", text_color="black", border_width=1, width=15, command=generateButton).pack(side="left", padx=5)
 
 # Clear Button
-clearValuesBtn = tk.Frame(right, bg="#ececec")
+clearValuesBtn = ctk.CTkFrame(right, fg_color="#ececec")
 clearValuesBtn.pack(fill="x", pady=4)
-tk.Button(clearValuesBtn, text="Clear Inputs", bg="#ececec", relief="groove", width=15, command=empty_values).pack(side="left", padx=5)
+ctk.CTkButton(clearValuesBtn, text="Clear Inputs", fg_color="#ececec", text_color="black", border_width=1, width=15, command=empty_values).pack(side="left", padx=5)
 
 
 # ── ChatBox / Console Redirection ────────────────────────────────────────────────────────────────
@@ -541,13 +543,13 @@ class TextRedirector:
             connected = True
             if connected:
                 topbarcolor.set(value="green")
-                statusbar.config(bg=topbarcolor.get())
+                statusbar.configure(fg_color=topbarcolor.get())
                 root.attributes('-topmost', False)
 
         def append_text():
-            self.widget.config(state="normal")
+            self.widget.configure(state="normal")
             self.widget.insert(tk.END, output.replace("[K", "").replace(">", ""))
-            self.widget.config(state="disabled")
+            self.widget.configure(state="disabled")
             self.widget.see(tk.END)
         self.widget.after(0, append_text)
 
