@@ -110,7 +110,7 @@ def update_visibility(*args):
             decodeFrame.pack(fill="x", pady=10, after=decodeTask)
             last_widget = decodeFrame
     
-        clearValuesBtn.pack(fill="x", pady=10, after=last_widget)
+        clearValuesBtn.pack(side="bottom", anchor="e", pady=10)
 
     except Exception as e:
         print(e)
