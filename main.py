@@ -6,6 +6,7 @@ import buffer
 import gui
 import socket
 import threading
+import os
 
 host = "vlbeintrocrypto.hevs.ch"
 port = 6000
@@ -49,4 +50,5 @@ def main():
         pass
 
 if __name__ == "__main__":
+    os.system('cls' if os.name == 'nt' else 'clear') #clear console
     main()

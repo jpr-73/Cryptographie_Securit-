@@ -7,6 +7,9 @@ import interpretCommand
 ctk.set_appearance_mode("light") # ou "dark"
 ctk.set_default_color_theme("blue")
 
+if __name__ == "__main__":
+    print("\033[91m {}\033[00m".format("Error: Run main.py instead."))
+    sys.exit(1)
 
 # ── Variables ────────────────────────────────────────────────────────────────
 sendingToServer = False
@@ -331,7 +334,7 @@ root = ctk.CTk()
 root.title("Secret Communication Channel")
 icon_img = tk.PhotoImage(file="icon.png")
 root.wm_iconphoto(True, icon_img)
-root.geometry("1000x600")
+root.geometry("1000x650")
 root.lift()
 root.focus_force()
 root.configure(fg_color="#ececec")
@@ -342,7 +345,7 @@ statusbar = ctk.CTkFrame(root, fg_color=topbarcolor.get(), height=4)
 statusbar.pack(fill="x")
 
 # ── Layout ─────────────────────────────────────────────────────────────────
-left = ctk.CTkFrame(root, fg_color="#ececec", width=350)
+left = ctk.CTkFrame(root, fg_color="#ececec", width=360)
 left.pack(side="left", fill="y", padx=8, pady=8)
 left.pack_propagate(False)
 
@@ -580,5 +583,6 @@ sys.stdout = TextRedirector(chat, sys.stdout)
 sys.stderr = TextRedirector(chat, sys.stderr)
 
 update_visibility()
+
 if __name__ == "__main__":
     root.mainloop()
