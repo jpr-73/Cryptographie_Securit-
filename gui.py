@@ -318,6 +318,7 @@ def empty_values() :
     pValue.set("")
     privKeyValue.set("")
     publKeyValue.set("")
+    inputtext.set("")
 
 def are_You_Stupid(mode):
     if (inputtext.get() == "" and mode == 'i'):
