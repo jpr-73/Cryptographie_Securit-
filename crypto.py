@@ -1,6 +1,7 @@
 '''File with all the crypto logic'''
 
 
+from hashlib import sha256
 from math import gcd
 import random
 
