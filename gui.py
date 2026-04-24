@@ -38,6 +38,7 @@ def update_visibility(*args):
         taskhashverify.pack_forget()
         verifyhashbutton.pack_forget()
         sendhashbutton.pack_forget()
+        clearValuesBtn.pack_forget
 
 
         selected_mode = mode_var.get()
@@ -88,6 +89,7 @@ def update_visibility(*args):
                 modField.pack(fill="x", pady=10, after=encodeTask)
                 eField.pack(fill="x", pady=10, after=modField)
                 encodeFrame.pack(fill="x", pady=10, after=eField)
+                last_widget = encodeFrame
 
             if selected_mode2 == "Decode":
                 decodeTask.pack(fill="x", pady=5, after=last_widget)
@@ -97,6 +99,7 @@ def update_visibility(*args):
 
                 contentField.pack(fill="x", pady=10, after=dField)
                 decodeFrame.pack(fill="x", pady=10, after=contentField)
+                last_widget = decodeFrame
 
 
         elif selected_mode == "Vigenere":
@@ -106,6 +109,8 @@ def update_visibility(*args):
             decodeTask.pack(fill="x", pady=10, after=encodeFrame)
             decodeFrame.pack(fill="x", pady=10, after=decodeTask)
             last_widget = decodeFrame
+    
+        clearValuesBtn.pack(fill="x", pady=10, after=last_widget)
 
     except Exception as e:
         print(e)
@@ -155,7 +160,6 @@ def encodeTaskButton():
                 interpretCommand.interpret("/task DifHel")
             case "Hashing":
                 interpretCommand.interpret("/task hash hash")
-        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
@@ -174,7 +178,6 @@ def decodeTaskButton():
                 interpretCommand.interpret("/task diffiehellman decode " + inputtext.get())
             case "Hashing":
                 interpretCommand.interpret("/task hashing decode " + inputtext.get())
-        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
@@ -182,21 +185,18 @@ def decodeTaskButton():
 def getDifHelTaskButton():
     try :
         interpretCommand.interpret("/task DifHel")
-        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
 def difHelGenSpaceButton():
     try :
         interpretCommand.interpret("/generate dh")
-        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
 def difHelHalfKeyButton():
     try :
         interpretCommand.interpret(f"/generate dh-hk {pValue.get()} {gValue.get()}")
-        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
@@ -204,35 +204,30 @@ def difHelSecretButton():
     try :
         #print(f"/generate dh-secret {pValue.get()} {privKeyValue.get()} {publKeyValue.get()}")
         interpretCommand.interpret(f"/generate dh-secret {pValue.get()} {privKeyValue.get()} {publKeyValue.get()}")
-        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
 def taskhashButton():
     try :
         interpretCommand.interpret(f"/task hash hash")
-        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
 def taskhashverifyButton():
     try :
         interpretCommand.interpret(f"/task hash verify")
-        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
 def sendhashButton():
     try :
         interpretCommand.interpret(f"/encode hash")
-        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
 def verifyhashButton():
     try :
         interpretCommand.interpret(f"/decode hash")
-        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
@@ -245,7 +240,6 @@ def generateButton():
                 interpretCommand.interpret("/generate rsa")
             case "DiffieHellman":
                 interpretCommand.interpret("/generate dh")
-        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
@@ -270,7 +264,6 @@ def encodeButton():
             case "Hashing":
                 output = f"/encode hashing {temp}"
                 interpretCommand.interpret(output)
-        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
@@ -294,7 +287,6 @@ def decodeButton():
             case "Hashing":
                 getKeyCommand = f"/decode hashing {keyValue.get()}"
                 interpretCommand.interpret(getKeyCommand)
-        empty_values()
     except Exception as e:
         print(f"Error: {e}")
 
@@ -304,6 +296,10 @@ def empty_values() :
     eValue.set("")
     dValue.set("")
     contentValue.set("")
+    gValue.set("")
+    pValue.set("")
+    privKeyValue.set("")
+    publKeyValue.set("")
 
 def are_You_Stupid(mode):
     if (inputtext.get() == "" and mode == 'i'):
@@ -519,6 +515,12 @@ tk.Button(decodeFrame, text="Decode", bg="#ececec", relief="groove", width=15, c
 genBtn = tk.Frame(right, bg="#ececec")
 genBtn.pack(fill="x", pady=4)
 tk.Button(genBtn, text="Generate", bg="#ececec", relief="groove", width=15, command=generateButton).pack(side="left", padx=5)
+
+# Clear Button
+clearValuesBtn = tk.Frame(right, bg="#ececec")
+clearValuesBtn.pack(fill="x", pady=4)
+tk.Button(clearValuesBtn, text="Clear Inputs", bg="#ececec", relief="groove", width=15, command=empty_values).pack(side="left", padx=5)
+
 
 # ── ChatBox / Console Redirection ────────────────────────────────────────────────────────────────
 
