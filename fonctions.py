@@ -29,8 +29,6 @@ def ints_to_string(int_list):
 # Network Encoding
 # ===========================================
 
-
-
 def decode_ints(data, bytes_per_int = 4):
     out : list = list()
     for i in range(len(data)):

@@ -33,6 +33,8 @@ def update_visibility(*args):
         privKeyField.pack_forget()
         publKeyField.pack_forget()
         difSendSecret.pack_forget()
+        taskhash.pack_forget()
+        taskhashverify.pack_forget()
 
 
         selected_mode = mode_var.get()
@@ -58,8 +60,9 @@ def update_visibility(*args):
             last_widget = difSendSecret
 
         elif selected_mode == "Hashing":
-            pass
-
+            taskhash.pack(fill="x", pady=10, after=modeTab)
+            taskhashverify.pack(fill="x", pady=10, after=taskhash)
+            last_widget = taskhashverify
 
         elif selected_mode == "RSA":
             encETdec.pack(fill="x", pady=5, after=modeTab)
@@ -185,11 +188,26 @@ def difHelHalfKeyButton():
 
 def difHelSecretButton():
     try :
-        print(f"/generate dh-secret {pValue.get()} {privKeyValue.get()} {publKeyValue.get()}")
+        #print(f"/generate dh-secret {pValue.get()} {privKeyValue.get()} {publKeyValue.get()}")
         interpretCommand.interpret(f"/generate dh-secret {pValue.get()} {privKeyValue.get()} {publKeyValue.get()}")
         empty_values()
     except Exception as e:
         print(f"Error: {e}")
+
+def taskhashButton():
+    try :
+        interpretCommand.interpret(f"/task hash hash")
+        empty_values()
+    except Exception as e:
+        print(f"Error: {e}")
+
+def taskhashverifyButton():
+    try :
+        interpretCommand.interpret(f"/task hash verify")
+        empty_values()
+    except Exception as e:
+        print(f"Error: {e}")
+
 
 def generateButton():
     global mode_var
@@ -430,6 +448,15 @@ difSendSecret = tk.Frame(right, bg="#ececec")
 difSendSecret.pack(fill="x", pady=4)
 tk.Button(difSendSecret, text="Send Secret", bg="#ececec", relief="groove", width=15, command=difHelSecretButton).pack(side="left", padx=5)
 
+# Hashing task button
+taskhash = tk.Frame(right, bg="#ececec")
+taskhash.pack(fill="x", pady=4)
+tk.Button(taskhash, text="Task Hash", bg="#ececec", relief="groove", width=15, command=taskhashButton).pack(side="left", padx=5)
+
+# Hashing task verify button
+taskhashverify = tk.Frame(right, bg="#ececec")
+taskhashverify.pack(fill="x", pady=4)
+tk.Button(taskhashverify, text="Verify Hash", bg="#ececec", relief="groove", width=15, command=taskhashverifyButton).pack(side="left", padx=5)
 
 # Encode
 encodeFrame = tk.Frame(right, bg="#ececec")
