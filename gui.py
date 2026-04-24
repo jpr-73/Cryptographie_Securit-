@@ -364,9 +364,9 @@ chat.pack(fill="both", expand=True)
 r1 = ctk.CTkFrame(right, fg_color="#ececec")
 r1.pack(fill="x", pady=(0, 6))
 ctk.CTkCheckBox(r1, text="Send to Server only", text_color="black", command=sendtoserver).pack(side="left")
-tab_var = tk.StringVar(value="Text")
-for t in ("Image", "Text"):
-    ctk.CTkRadioButton(r1, text=t, variable=tab_var, value=t, text_color="black").pack(side="right", padx=1)
+#tab_var = tk.StringVar(value="Text")
+#for t in ("Image", "Text"):
+#    ctk.CTkRadioButton(r1, text=t, variable=tab_var, value=t, text_color="black").pack(side="right", padx=1)
 
 # Input box
 inputtext = tk.StringVar()
