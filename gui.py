@@ -122,9 +122,9 @@ def update_visibility(*args):
             keyField.pack(fill="x", pady=10, after=modeTab)
             encodeTask.pack(fill="x", pady=10, after=keyField)
             encodeFrame.pack(fill="x", pady=10, after=encodeTask)
-            decodeTask.pack(fill="x", pady=10, after=encodeFrame)
-            decodeFrame.pack(fill="x", pady=10, after=decodeTask)
-            last_widget = decodeFrame
+            #decodeTask.pack(fill="x", pady=10, after=encodeFrame)
+            #decodeFrame.pack(fill="x", pady=10, after=decodeTask)
+            last_widget = encodeFrame #change to "decodeFrame" if they are done 
     
         clearValuesBtn.pack(side="bottom", anchor="e", pady=10)
 
