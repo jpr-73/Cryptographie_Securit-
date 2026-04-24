@@ -96,7 +96,6 @@ def interpret(line) :
                             return True
                         
                         case "dh-hk" :
-                            #print("g=" + str(splitted[1]) + " p=" + str(splitted[2]))
                             p = int(splitted[2])
                             g = int(splitted[3])
 

@@ -13,8 +13,6 @@ port = 6000
 ip = ""
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-#print(host, port)
-
 client1 = client.Client()
 buff1 = buffer.Buffer()
 
